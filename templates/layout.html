@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>DePeC</title>
+  <link rel="icon" type="image/png" href="static\image\soloLogo_Indec.png" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css')}}">
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">
+        <img src="static/image/depec.png" class="avatar2" alt="Avatar Image">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <a href="/logout" class="btn btn-danger" style="float: right;">Cerrar Sesión</a>
+    </div>
+  </nav>
+  <div class="container pt-4">
+    {% block body%}
+    {% endblock %}
+  </div>
+  <script src="{{url_for('static', filename='js/main.js')}}"></script>
+</body>
+<footer>
+  <div class="container-fluid">
+    <h4> Usuario: {{session['name']}} {{session['surname']}}
+      {% if session['rol'] == 1 %}
+      Rol: Admin
+      {% else %}
+      Rol: User
+      {% endif %}
+    </h4>
+  </div>
+</footer>
+
+</html>
