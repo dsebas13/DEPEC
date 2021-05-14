@@ -1,0 +1,669 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col md-5">
+        <form action="/add_cv" method="POST" enctype="multipart/form-data">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4>Ingreso de CV</h4>
+                        <h5>Complete los datos personales</h5>
+                    </div>
+                </div>
+                <br>
+                <div class="card card-body">
+                    <div class="box-container container">
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Datos Pesonales
+                                    <small class="pull-right" rigth style="float: right">
+                                        <span class="text-danger">*</span>
+                                        &nbsp; Campos Obligatorios &nbsp; &nbsp;
+                                    </small>
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="nombre"></label>Nombre</label><br><br>
+                                <label for="nombre"></label>{{ cv.1 }}</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="apellido"></label>Apellido</label><br><br>
+                                <label for="apellido"></label>{{ cv.2 }}</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="telefono"></label>Telefono *</label>
+                                <br>
+                                <input type="tel" name="telefono" id="telefono" required
+                                    placeholder="Ingrese el numero de telefono" minlength="7" maxlength="20" size="50"
+                                    class="form-control">
+                            </div>
+                            <div class="col-sm-6">
+                                </p>
+                                <br>
+                                <h5>Direccion en la que desempeña sus tareas:</h5>
+                            </div>
+                            <div class="col-sm-6" style="left: -150px;">
+                                </p>
+                                <br>
+                                <h4>{{ cv.11 }}</h4>
+                            </div>
+                        </div>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="container">
+                <div class="card card-body">
+                    <div class="box-container container">
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Ultimas direcciones en las cuales desempeño tareas (no incluya la actual): </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label for="iddireccion"></label>Dirección</label>
+                                    <select name="iddireccion" id="iddireccion" onchange="direccion('iddireccion')" class="selectpicker form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for d in direcccio %}
+                                        <option value="{{ d.0 }}">{{ d.0 }} - {{ d.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label for="fechaIngreso">Fecha Desde:</label>
+                                    </br>
+                                    <input type="date" id="start" name="fechaIngreso" onchange="checkfield('start')" min={{ cv.13 }} max={{ cv.14 }}
+                                        class="form-control">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="fechaEgreso">Fecha Hasta:</label>
+                                    </br>
+                                    <input type="date" id="end" name="fechaEgreso" onchange="checkfield('end')" min={{ cv.13 }} max={{ cv.14 }}
+                                        class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <br>
+                                    <label for="puesto">Puesto:</label>
+                                    <input type="text" name="puesto" id="puesto" onchange="checkfield('puesto')" minlength="1" maxlength="100" size="100"
+                                        class="form-control">
+                                </div>
+                                <!-- onchange="checkfield('puesto')" -->
+                                <div class="col-sm-6">
+                                    <br>
+                                    <label for="tareas">Tareas realizadas:</label>
+                                    <input type="text" name="tareas" id="tareas" minlength="1" maxlength="50" size="50"
+                                        class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label for="iddireccion1"></label>Dirección</label>
+                                    <select name="iddireccion1" id="iddireccion1" onchange="direccion1('iddireccion1')" class="selectpicker form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for d in direcccio %}
+                                        <option value="{{ d.0 }}">{{ d.0 }} - {{ d.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="fechaIngreso1">Fecha Desde:</label>
+                                    </br>
+                                    <input type="date" id="start1" name="fechaIngreso1" onchange="checkfield('start1')" min={{ cv.13 }} max={{ cv.14 }}
+                                        class="form-control">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="fechaEgreso1">Fecha Hasta:</label>
+                                    </br>
+                                    <input type="date" id="end1" name="fechaEgreso1" onchange="checkfield('end1')" min={{ cv.13 }} max={{ cv.14 }}
+                                        class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <br>
+                                    <label for="puesto1">Puesto:</label>
+                                    <input type="text" name="puesto1" minlength="1" maxlength="100" size="100"
+                                        class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <br>
+                                    <label for="tareas1">Tareas realizadas:</label>
+                                    <input type="text" name="tareas1" minlength="1" maxlength="50" size="50"
+                                        class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label for="iddireccion2"></label>Dirección</label>
+                                    <select name="iddireccion2" id="iddireccion2" onchange="direccion2('iddireccion2')" class="selectpicker form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for d in direcccio %}
+                                        <option value="{{ d.0 }}">{{ d.0 }} - {{ d.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label for="fechaIngreso2">Fecha Desde:</label>
+                                    </br>
+                                    <input type="date" id="start2" name="fechaIngreso2" min={{ cv.13 }} max={{ cv.14 }}
+                                        class="form-control">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="fechaEgreso2">Fecha Hasta:</label>
+                                    </br>
+                                    <input type="date" id="end2" name="fechaEgreso2" min={{ cv.13 }} max={{ cv.14 }}
+                                        class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <br>
+                                    <label for="puesto2">Puesto:</label>
+                                    <input type="text" name="puesto2" minlength="1" maxlength="100" size="100"
+                                        class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <br>
+                                    <label for="tareas2">Tareas realizadas:</label>
+                                    <input type="text" name="tareas2" minlength="1" maxlength="50" size="50"
+                                        class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="container">
+                    <div class="card card-body">
+                        <div class="box-container container">
+                            </p>
+                            <div class="row">
+                                <div class="col-sm-12"></div>
+                                <h5>Ultimos estudios académicos cursados
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="estudios">Estudios</label>
+                                    <select name="estudios" required class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for e in atrib %}
+                                        {%if e.2 == 'E'%}
+                                        <option value="{{ e.0 }}">{{ e.0 }} - {{ e.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="estado">Estado</label>
+                                    <select name="estado" required class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for e in level %}
+                                        {%if e.4 == 'E'%}
+                                        <option value="{{ e.0 }}">{{ e.0 }} - {{ e.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="estudios1">Estudios</label>
+                                    <select name="estudios1" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for e in atrib %}
+                                        {%if e.2 == 'E'%}
+                                        <option value="{{ e.0 }}">{{ e.0 }} - {{ e.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="estado1">Estado</label>
+                                    <select name="estado1" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for e in level %}
+                                        {%if e.4 == 'E'%}
+                                        <option value="{{ e.0 }}">{{ e.0 }} - {{ e.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="estudios2">Estudios</label>
+                                    <select name="estudios2" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for e in atrib %}
+                                        {%if e.2 == 'E'%}
+                                        <option value="{{ e.0 }}">{{ e.0 }} - {{ e.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="estado2">Estado</label>
+                                    <select name="estado2" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for e in level %}
+                                        {%if e.4 == 'E'%}
+                                        <option value="{{ e.0 }}">{{ e.0 }} - {{ e.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="container">
+                <div class="card card-body">
+                    <div class="box-container container">
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Idiomas
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="idioma">Idioma</label>
+                                    <select name="idioma" required class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for i in atrib %}
+                                        {%if i.2 == 'I'%}
+                                        <option value="{{ i.0 }}">{{ i.0 }} - {{ i.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="nivel">Nivel</label>
+                                    <select name="nivel" required class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for i in level %}
+                                        {%if i.4 == 'I'%}
+                                        <option value="{{ i.0 }}">{{ i.0 }} - {{ i.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="idioma1">Idioma</label>
+                                    <select name="idioma1" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for i in atrib %}
+                                        {%if i.2 == 'I'%}
+                                        <option value="{{ i.0 }}">{{ i.0 }} - {{ i.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="nivel1">Nivel</label>
+                                    <select name="nivel1" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for i in level %}
+                                        {%if i.4 == 'I'%}
+                                        <option value="{{ i.0 }}">{{ i.0 }} - {{ i.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="idioma2">Idioma</label>
+                                    <select name="idioma2" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for i in atrib %}
+                                        {%if i.2 == 'I'%}
+                                        <option value="{{ i.0 }}">{{ i.0 }} - {{ i.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="nivel2">Nivel</label>
+                                    <select name="nivel2" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for i in level %}
+                                        {%if i.4 == 'I'%}
+                                        <option value="{{ i.0 }}">{{ i.0 }} - {{ i.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div class="container">
+                <div class="card card-body">
+                    <div class="box-container container">
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Conocimientos técnicos
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="Herramientas">Herramientas técnicas *</label>
+                                    <select name="Herramientas" required class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for t in atrib %}
+                                        {%if t.2 == 'T'%}
+                                        <option value="{{ t.0 }}">{{ t.0 }} - {{ t.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="niveltecnico">Nivel *</label>
+                                    <select name="niveltecnico" required class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for t in level %}
+                                        {%if t.4 == 'T'%}
+                                        <option value="{{ t.0 }}">{{ t.0 }} - {{ t.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="Herramientas1">Herramientas técnicas</label>
+                                    <select name="Herramientas1" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for t in atrib %}
+                                        {%if t.2 == 'T'%}
+                                        <option value="{{ t.0 }}">{{ t.0 }} - {{ t.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="niveltecnico1">Nivel</label>
+                                    <select name="niveltecnico1" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for t in level %}
+                                        {%if t.4 == 'T'%}
+                                        <option value="{{ t.0 }}">{{ t.0 }} - {{ t.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="Herramientas2">Herramientas técnicas</label>
+                                    <select name="Herramientas2" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for t in atrib %}
+                                        {%if t.2 == 'T'%}
+                                        <option value="{{ t.0 }}">{{ t.0 }} - {{ t.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="niveltecnico2">Nivel</label>
+                                    <select name="niveltecnico2" class="form-control">
+                                        <option value="">Seleccione</option>
+                                        {% for t in level %}
+                                        {%if t.4 == 'T'%}
+                                        <option value="{{ t.0 }}">{{ t.0 }} - {{ t.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="container">
+                <div class="card card-body">
+                    <div class="box-container container">
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Caractericticas personales
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h4 for="caracteristicas">Seleccione:</h4>
+                                    <hr>
+                                    <div class="form-check">
+                                        {% for a in atrib %}
+                                        {%if a.2 == 'A'%}
+                                        <input name="formcheck" class="form-check-input" type="checkbox" value="{{a.0}}" id="{{a.0}}">
+                                        <label class="form-check-label" for="{{a.0}}">
+                                            {{a.0}} - {{a.1}}
+                                        </label>
+                                        </p>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="form group">
+                    <button type="submit" class="btn btn-primary" rigth style="float: right">
+                        Grabar
+                    </button>
+                </div>
+                <div class="container">
+                    <div style="right:30px;" class="col-sm-10">
+                        <div class="card card-body">
+                            <div class="box-container container">
+                                <div class="form-group">
+                                    <label for="formFile" class="form-label mt-4">Ingrese su CV en formato
+                                        PDF</label>
+                                    <br>
+                                    <input type="file" id="file" name="archivo" class="btn" accept=".pdf" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function checkfield() {
+        var start = document.getElementById('start').value;
+        var end = document.getElementById('end').value;
+
+        if (end != "") {
+            if (start > end) {
+                alert('La fecha desde no puese ser mayor a la de hasta, ingresela nuevamente, usted ha ingresado');
+                document.getElementById('end').value = "";
+            }
+        }
+
+        var start1 = document.getElementById('start1').value;
+        var end1 = document.getElementById('end1').value;
+        if (end1 != "") {
+            if (start1 > end1) {
+                alert('La fecha desde no puese ser mayor a la de hasta, ingresela nuevamente, usted ha ingresado');
+                document.getElementById('end1').value = "";
+            }
+        }
+
+        var start2 = document.getElementById('start2').value;
+        var end2 = document.getElementById('end2').value;
+        if (end2 != "") {
+            if (start2 > end2) {
+                alert('La fecha desde no puese ser mayor a la de hasta, ingresela nuevamente, usted ha ingresado');
+                document.getElementById('end2').value = "";
+            }
+        }
+
+
+
+    }
+
+    function direccion (input) {
+        dir = document.getElementById('iddireccion').value;
+        dir1 = document.getElementById('iddireccion1').value;
+        dir2 = document.getElementById('iddireccion2').value;
+
+        if (dir === dir1){
+            if (dir != "") {
+                alert('Direccion ya seleccionada, debe elegir otra');
+                document.getElementById('iddireccion').value = "";
+            }
+        }
+
+        if (dir === dir2){
+            if (dir1 != "") {
+                alert('Direccion ya seleccionada, debe elegir otra') ;
+                document.getElementById('iddireccion').value = "";
+            
+            }
+        }
+    }
+
+    function direccion1 (input) {
+        dir = document.getElementById('iddireccion').value;
+        dir1 = document.getElementById('iddireccion1').value;
+        dir2 = document.getElementById('iddireccion2').value;
+
+        if (dir1 === dir){
+            if (dir1 != "") {
+                alert('Direccion ya seleccionada, debe elegir otra');
+                document.getElementById('iddireccion1').value = "";
+            }
+        }
+
+        if (dir1 === dir2){
+            if (dir1 != "") {
+                alert('Direccion ya seleccionada, debe elegir otra') ;
+                document.getElementById('iddireccion1').value = "";
+            
+            }
+        }
+    }
+    function direccion2 (input) {
+        dir = document.getElementById('iddireccion').value;
+        dir1 = document.getElementById('iddireccion1').value;
+        dir2 = document.getElementById('iddireccion2').value;
+
+        if (dir2 === dir){
+            if (dir2 != "") {
+                alert('Direccion ya seleccionada, debe elegir otra');
+                document.getElementById('iddireccion2').value = "";
+            }
+        }
+
+        if (dir2 === dir1){
+            if (dir2 != "") {
+                alert('Direccion ya seleccionada, debe elegir otra') ;
+                document.getElementById('iddireccion2').value = "";
+            
+            }
+        }
+    }
+        
+/*      
+        var puesto = document.getElementById(puesto).value;
+        alert('puesto') */
+
+        
+       
+/*         if (desde > hasta){
+        alert('La fecha desde no puede ser mayor a la fecha hasta');
+        a = 1; */
+        
+        
+
+/*         var puesto = document.getElementById(puesto).value;
+        var tarea = document.getElementById(tarea).value;
+
+        hasta = document.getElementById(end).value; 
+    }
+    */
+</script>
+
+{% endblock%}
