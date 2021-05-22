@@ -31,14 +31,14 @@ background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); /* W3C, IE 10+
     position: absolute;
     top: -50px;
     left: calc(50% - 50px);
-    
-  }
-  .avatar2 {
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
   }
 
+  .avatar2 {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+  }
+  
   .login-box h1 {
     margin: 0;
     padding: 0 0 20px;
@@ -100,7 +100,7 @@ background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); /* W3C, IE 10+
   }
 
   footer{
-    text-align: center;
+    text-align: right;
     height: 3vh;
     width: 100vw;
     display: flex;
@@ -110,3 +110,58 @@ background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); /* W3C, IE 10+
     position: fixed;
     bottom: 0;
   }
+
+
+  .footer2{
+
+    height: 2vh;
+    width: 100vw;
+    display: flex;
+    z-index: 10;
+    position: fixed;
+    bottom: 0;
+  }
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+  /* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.editaratrib {
+  display: flex;
+}
+
+.editaratrib > p {
+  margin: 0;
+}

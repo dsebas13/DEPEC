@@ -1,0 +1,612 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="position-fixed" style="left: 50px;">
+    <button style="left: 200;" class="btn btn-danger" onclick="goBack()">Regresar</button>
+  
+    <script>
+      function goBack() {
+        window.history.back();
+      }
+    </script>
+  
+  </div>
+<div class="row"> 
+    <div class="col md-5">
+        <form action="/saveNewPerfil" method="POST">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3>Nuevo Perfil</h3>
+                    </div>
+                </div>
+                <br>
+                <div class="container">
+                    <div class="card card-body">
+                        <div class="box-container container">
+                            <div class="col-sm-4">
+                                <label for="descripcion">Descripción</label>
+                                </br>
+                                <h2></h2>
+                                <input required type="descripcion" id="descripcion" name="descripcion" class="form-control"
+                                placeholder="Ingrese la descipcion del perfil">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>    
+       
+                <div class="container">
+                    <div class="card card-body">
+                        <div class="box-container container">
+                            </p>
+                            <div class="row">
+                                <div class="col-sm-12"></div>
+                                <h5>Ultimos estudios académicos cursados
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="estudios">Estudios</label>
+                                    <select name="estudios"  class="form-control">
+                                        {% if dataE.0 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataE.0.3 }} - {{ dataE.0.4 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for e in atrib %}
+                                        {%if e.2 == 'E'%}
+                                        <option value="{{ e.0 }}">{{ e.0 }} - {{ e.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                        
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="estado">Estado</label>
+                                    <select name="estado"  class="form-control">
+                                        {% if dataE.0 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataE.0.6 }} - {{ dataE.0.7 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for e in level %}
+                                        {%if e.4 == 'E'%}
+                                        <option value="{{ e.0 }}">{{ e.0 }} - {{ e.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="estudios1">Estudios</label>
+                                    <select name="estudios1" class="form-control">
+                                        {% if dataE.1%}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataE.1.3 }} - {{ dataE.1.4 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for e in atrib %}
+                                        {%if e.2 == 'E'%}
+                                        <option value="{{ e.0 }}">{{ e.0 }} - {{ e.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="estado1">Estado</label>
+                                    <select name="estado1" class="form-control">
+                                        {% if dataE.1 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataE.1.6 }} - {{ dataE.1.7 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for e in level %}
+                                        {%if e.4 == 'E'%}
+                                        <option value="{{ e.0 }}">{{ e.0 }} - {{ e.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="estudios2">Estudios</label>
+                                    <select name="estudios2" class="form-control">
+                                        {% if dataE.2 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataE.2.3 }} - {{ dataE.2.4 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for e in atrib %}
+                                        {%if e.2 == 'E'%}
+                                        <option value="{{ e.0 }}">{{ e.0 }} - {{ e.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="estado2">Estado</label>
+                                    <select name="estado2" class="form-control">
+                                        {% if dataE.2 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataE.2.6 }} - {{ dataE.2.7 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for e in level %}
+                                        {%if e.4 == 'E'%}
+                                        <option value="{{ e.0 }}">{{ e.0 }} - {{ e.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <hr>
+            <div class="container">
+                <div class="card card-body">
+                    <div class="box-container container">
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Idiomas
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="idioma">Idioma</label>
+                                    <select name="idioma"  class="form-control">
+                                        {% if dataI.0 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataI.0.3 }} - {{ dataI.0.4 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for i in atrib %}
+                                        {%if i.2 == 'I'%}
+                                        <option value="{{ i.0 }}">{{ i.0 }} - {{ i.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="nivel">Nivel</label>
+                                    <select name="nivel"  class="form-control">
+                                        {% if dataI.0 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataI.0.6 }} - {{ dataI.0.7 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for i in level %}
+                                        {%if i.4 == 'I'%}
+                                        <option value="{{ i.0 }}">{{ i.0 }} - {{ i.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="idioma1">Idioma</label>
+                                    <select name="idioma1" class="form-control">
+                                        {% if dataI.1 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataI.1.3 }} - {{ dataI.1.4 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for i in atrib %}
+                                        {%if i.2 == 'I'%}
+                                        <option value="{{ i.0 }}">{{ i.0 }} - {{ i.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="nivel1">Nivel</label>
+                                    <select name="nivel1" class="form-control">
+                                        {% if dataI.1 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataI.1.6 }} - {{ dataI.1.7 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for i in level %}
+                                        {%if i.4 == 'I'%}
+                                        <option value="{{ i.0 }}">{{ i.0 }} - {{ i.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="idioma2">Idioma</label>
+                                    <select name="idioma2" class="form-control">
+                                        {% if dataI.2 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataI.2.3 }} - {{ dataI.2.4 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for i in atrib %}
+                                        {%if i.2 == 'I'%}
+                                        <option value="{{ i.0 }}">{{ i.0 }} - {{ i.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="nivel2">Nivel</label>
+                                    <select name="nivel2" class="form-control">
+                                        {% if dataI.2 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataI.2.6 }} - {{ dataI.2.7 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for i in level %}
+                                        {%if i.4 == 'I'%}
+                                        <option value="{{ i.0 }}">{{ i.0 }} - {{ i.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div class="container">
+                <div class="card card-body">
+                    <div class="box-container container">
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Conocimientos técnicos
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="Herramientas">Herramientas técnicas *</label>
+                                    <select name="Herramientas"  class="form-control">
+                                        {% if dataT.0 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataT.0.3 }} - {{ dataT.0.4 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for t in atrib %}
+                                        {%if t.2 == 'T'%}
+                                        <option value="{{ t.0 }}">{{ t.0 }} - {{ t.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="niveltecnico">Nivel *</label>
+                                    <select name="niveltecnico"  class="form-control">
+                                        {% if dataT.0 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataT.0.6 }} - {{ dataT.0.7 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for t in level %}
+                                        {%if t.4 == 'T'%}
+                                        <option value="{{ t.0 }}">{{ t.0 }} - {{ t.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="Herramientas1">Herramientas técnicas</label>
+                                    <select name="Herramientas1" class="form-control">
+                                        {% if dataT.1 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataT.1.3 }} - {{ dataT.1.4 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for t in atrib %}
+                                        {%if t.2 == 'T'%}
+                                        <option value="{{ t.0 }}">{{ t.0 }} - {{ t.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="niveltecnico1">Nivel</label>
+                                    <select name="niveltecnico1" class="form-control">
+                                        {% if dataT.1 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataT.1.6 }} - {{ dataT.1.7 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for t in level %}
+                                        {%if t.4 == 'T'%}
+                                        <option value="{{ t.0 }}">{{ t.0 }} - {{ t.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="Herramientas2">Herramientas técnicas</label>
+                                    <select name="Herramientas2" class="form-control">
+                                        {% if dataT.2 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataT.2.3 }} - {{ dataT.2.4 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for t in atrib %}
+                                        {%if t.2 == 'T'%}
+                                        <option value="{{ t.0 }}">{{ t.0 }} - {{ t.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="niveltecnico2">Nivel</label>
+                                    <select name="niveltecnico2" class="form-control">
+                                        {% if dataT.2 %}
+                                        <option value="">Seleccione</option>
+                                        <option selected="selected" class="d-none">{{ dataT.2.6 }} - {{ dataT.2.7 }}</option>
+                                        {% else %}
+                                        <option value="">Seleccione</option>
+                                        {% endif %}
+                                        {% for t in level %}
+                                        {%if t.4 == 'T'%}
+                                        <option value="{{ t.0 }}">{{ t.0 }} - {{ t.1 }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="container">
+                <div class="card card-body">
+                    <div class="box-container container">
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Caractericticas personales
+                                </h5>
+                            </div>
+                        </div>
+                        </p>
+                        <div class="card card-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    
+                                    <h4 for="caracteristicas">Seleccione: </h4>
+                                    <hr>
+                                    <div class="form-check">
+                                        {% if dataAsi %}
+                                        {% for a in dataA %}
+                                        {% if a.0 == None %}
+                                        <input name="formcheck" class="form-check-input" type="checkbox" value="{{a.2}}"
+                                            id="{{a.2}}">
+                                        <label class="form-check-label" for="{{a.0}}">
+                                            {{a.2}} - {{a.3}}
+                                        </label>
+                                        </p>
+                                        {% else %}
+                                        <input name="formcheck" checked class="form-check-input" type="checkbox" value="{{a.2}}"
+                                        id="{{a.2}}">
+                                        <label class="form-check-label" for="{{a.0}}">
+                                        {{a.2}} - {{a.3}}
+                                        </label>
+                                        </p>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% else %}
+                                        {% for to in dataTODO %}
+                                        <input name="formcheck" class="form-check-input" type="checkbox" value="{{to.0}}"
+                                        id="{{to.0}}">
+                                        <label class="form-check-label" for="{{to.0}}">
+                                        {{to.0}} - {{to.1}}
+                                        </label>
+                                        </p>
+                                        {%endfor%}
+                                        {%endif%}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form group">
+                    <button type="submit" class="btn btn-primary" rigth style="float: right">
+                        Grabar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function checkfield() {
+        var start = document.getElementById('start').value;
+        var end = document.getElementById('end').value;
+
+        if (end != "") {
+            if (start > end) {
+                alert('La fecha desde no puese ser mayor a la de hasta, ingresela nuevamente, usted ha ingresado');
+                document.getElementById('end').value = "";
+            }
+        }
+
+        var start1 = document.getElementById('start1').value;
+        var end1 = document.getElementById('end1').value;
+        if (end1 != "") {
+            if (start1 > end1) {
+                alert('La fecha desde no puese ser mayor a la de hasta, ingresela nuevamente, usted ha ingresado');
+                document.getElementById('end1').value = "";
+            }
+        }
+
+        var start2 = document.getElementById('start2').value;
+        var end2 = document.getElementById('end2').value;
+        if (end2 != "") {
+            if (start2 > end2) {
+                alert('La fecha desde no puese ser mayor a la de hasta, ingresela nuevamente, usted ha ingresado');
+                document.getElementById('end2').value = "";
+            }
+        }
+
+
+
+    }
+
+    function direccion(input) {
+        dir = document.getElementById('iddireccion').value;
+        dir1 = document.getElementById('iddireccion1').value;
+        dir2 = document.getElementById('iddireccion2').value;
+
+        if (dir === dir1) {
+            if (dir != "") {
+                alert('Direccion ya seleccionada, debe elegir otra');
+                document.getElementById('iddireccion').value = "";
+            }
+        }
+
+        if (dir === dir2) {
+            if (dir1 != "") {
+                alert('Direccion ya seleccionada, debe elegir otra');
+                document.getElementById('iddireccion').value = "";
+
+            }
+        }
+    }
+
+    function direccion1(input) {
+        dir = document.getElementById('iddireccion').value;
+        dir1 = document.getElementById('iddireccion1').value;
+        dir2 = document.getElementById('iddireccion2').value;
+
+        if (dir1 === dir) {
+            if (dir1 != "") {
+                alert('Direccion ya seleccionada, debe elegir otra');
+                document.getElementById('iddireccion1').value = "";
+            }
+        }
+
+        if (dir1 === dir2) {
+            if (dir1 != "") {
+                alert('Direccion ya seleccionada, debe elegir otra');
+                document.getElementById('iddireccion1').value = "";
+
+            }
+        }
+    }
+    function direccion2(input) {
+        dir = document.getElementById('iddireccion').value;
+        dir1 = document.getElementById('iddireccion1').value;
+        dir2 = document.getElementById('iddireccion2').value;
+
+        if (dir2 === dir) {
+            if (dir2 != "") {
+                alert('Direccion ya seleccionada, debe elegir otra');
+                document.getElementById('iddireccion2').value = "";
+            }
+        }
+
+        if (dir2 === dir1) {
+            if (dir2 != "") {
+                alert('Direccion ya seleccionada, debe elegir otra');
+                document.getElementById('iddireccion2').value = "";
+
+            }
+        }
+    }
+
+    /*
+            var puesto = document.getElementById(puesto).value;
+            alert('puesto') */
+
+
+
+    /*         if (desde > hasta){
+            alert('La fecha desde no puede ser mayor a la fecha hasta');
+            a = 1; */
+
+
+
+    /*         var puesto = document.getElementById(puesto).value;
+            var tarea = document.getElementById(tarea).value;
+    
+            hasta = document.getElementById(end).value;
+        }
+        */
+</script>
+
+{% endblock%}
