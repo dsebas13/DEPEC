@@ -1,0 +1,63 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{% if session['rol'] == 1 %}
+<div class="position-fixed" style="left: 10px;">
+    <h2 class="position-fixed" style="margin-top: -10px;">Mis Busquedas</h2>
+    <!-- <a href="/nuevopuesto" class="btn btn-primary" rigth style="float: right">Nuevo</a> -->
+
+</div>
+<div class="position-fixed" style="right: 100px;">
+    
+    <a href="/nuevopuesto" class="btn btn-success" rigth style="float: right;"><i class="fas fa-plus"></i> Nuevo</a>
+
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col md-7">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <br>
+        {% for b in busqueda %}
+        
+        <div class="card text-black bg-white mb-2" style="display: block;">
+            
+            <div class="card-body">
+                <h4 class="card-title">{{ b.0 }} | {{b.2}}</h4>
+                <p class="card-text"> {{ b.11 }} </p>
+                <p class="card-text"> Vacantes: {{ b.4 }}</p>
+                <a href="/viewjob/{{b.0}}" class="btn btn-sm" style="background-color: grey; color: white;">Ver</a>
+                <button type="button" class="btn btn-sm" style="background-color:tomato; color: white;">Dias: {{ b.13 }} </button>
+                {% if session['rol'] == 1 %}
+                <a href="/deletejobs/{{b.0}}" class="btn btn-sm btn-delete" rigth style="float: right; background-color: lightblue;">Eliminar</a>
+                <a href="/editjobs/{{b.0}}" class="btn btn-sm" rigth style="float: right; background-color: #ab3fff; color: white;" >Editar</a>
+                {% endif %}
+            </div>
+        </div>
+
+        
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
+
+
+
+
+{% endblock %}

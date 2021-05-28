@@ -10,53 +10,81 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css')}}">
+  <!-- <link rel="stylesheet" type="text/css" href="/static/css/fontawesome/css/all.css"> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #3f3f3f;"  >
     <a class="navbar-brand" href="/">
       <img src="{{ url_for('static', filename='image/depec.png')}}" class="avatar2" alt="Avatar Image">
     </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul style="font-size: 16px;" class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/cv">Ingresar CV</a>
-          </li>
-          {% if session['rol'] == 1 %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-              aria-expanded="false">Atributos</a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="/atributo/I">Idiomas</a>
-              <a class="dropdown-item" href="/atributo/T">Conocimientos Técnicos</a>
-              <a class="dropdown-item" href="/atributo/A">Caracteristicas Personales</a>
-              <a class="dropdown-item" href="/atributo/E">Estudios Academicos</a>
-              <div class="dropdown-divider"></div>
-            </div>
-          </li>
-          &nbsp;
-          &nbsp;
-          <li class="nav-item">
-            <a class="nav-link" href="/perfil">Perfil</a>
-          </li>
-          {% endif %}
-        </ul>
-        
-  
-      </div>
-      <a href="/logout" class="btn btn-danger" style="float: right;">Cerrar Sesión</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul style="font-size: 16px;" class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/gridcv">CV's</a>
+        </li>
+        &nbsp;
+        &nbsp;
+        {% if session['id']  == 1 %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+            aria-expanded="false">Busqueda</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/gridjobs">Busquedas Activas</a>
+            <a class="dropdown-item" href="/mygridjobs">Mis Busquedas</a>
+          </div>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="/gridjobs">Busquedas Activas</a>
+        </li>
+        {% endif %}
+        &nbsp;
+        &nbsp;
+        {% if session['rol'] == 1 %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+            aria-expanded="false">Atributos</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/atributo/I">Idiomas</a>
+            <a class="dropdown-item" href="/atributo/T">Conocimientos Técnicos</a>
+            <a class="dropdown-item" href="/atributo/A">Caracteristicas Personales</a>
+            <a class="dropdown-item" href="/atributo/E">Estudios Academicos</a>
+          </div>
+        </li>
+        &nbsp;
+        &nbsp;
+        <li class="nav-item">
+          <a class="nav-link" href="/perfil">Perfil</a>
+        </li>
+        {% endif %}
+      </ul>
+
+
     </div>
+    <!--       <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="text" placeholder="Search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+      </form> -->
+      <a data-bs-toggle="tooltip" data-bs-placement="top" title="Usuario: {{session['name'].capitalize()}} {{session['surname'].capitalize()}}&#10;{%if session['rol'] == 1 %}Rol: Admin {% else %}Rol: User {% endif %}" 
+      href="/logout" class="btn btn-primary" style="float: right;"><i class="fas fa-user"></i></a>
+      &nbsp;
+      &nbsp;
+    <a data-bs-toggle="tooltip" data-bs-placement="top" title="Cerrar Sesión" href="/logout" class="btn btn-danger" style="float: right;"><i class="fas fa-sign-out-alt"></i></a>
   </nav>
   <div class="container pt-4">
     {% block body%}
     {% endblock %}
   </div>
+  <!-- Scrips -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -67,18 +95,15 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
     integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
+
   <script src="{{url_for('static', filename='js/main.js')}}"></script>
 </body>
 <footer>
   <div>
-    <h4 class="footer2"> Usuario: {{session['name']}} {{session['surname']}}
-      {% if session['rol'] == 1 %}
-      Rol: Admin
-      {% else %}
-      Rol: User
-      {% endif %}
-    </h4>
-    <h4>DePeC - Desarrollo Personal de Carrera   ---- </h4>
+    <h5 class="footer2"> Desarrollo Personal de Carrera
+
+    </h5>
+    <h5>Version: 0.2 &nbsp;&nbsp;&nbsp;&nbsp;  </h5>
   </div>
   <div>
 

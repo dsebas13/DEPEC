@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class="position-fixed" style="left: 50px;">
-    <button style="left: 200;" class="btn btn-danger" onclick="goBack()">Regresar</button>
+    <button style="left: 200; background-color: #ff6961; color: white;" class="btn" onclick="goBack()">Regresar</button>
   
     <script>
       function goBack() {
@@ -41,14 +41,14 @@
                                 <label for="descripcion">Descripción</label>
                                 </br>
                                 <h2></h2>
-                                <input required type="descripcion" id="descripcion" name="descripcion" class="form-control"
+                                <input required type="descripcion" onchange="descripcio('descripcion')" id="descripcion" name="descripcion" class="form-control"
                                 placeholder="Ingrese la descipcion del perfil">
                             </div>
                         </div>
                     </div>
                 </div>
                 <hr>    
-       
+                <input type="hidden" id="descript" name="descript" value="{{descript}}">
                 <div class="container">
                     <div class="card card-body">
                         <div class="box-container container">
@@ -64,7 +64,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label for="estudios">Estudios</label>
-                                    <select name="estudios"  class="form-control">
+                                    <select name="estudios" id="estudios" onchange="estudio('estudios')" class="selectpicker form-control">
                                         {% if dataE.0 %}
                                         <option value="">Seleccione</option>
                                         <option selected="selected" class="d-none">{{ dataE.0.3 }} - {{ dataE.0.4 }}</option>
@@ -102,7 +102,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label for="estudios1">Estudios</label>
-                                    <select name="estudios1" class="form-control">
+                                    <select name="estudios1" id="estudios1" onchange="estudio1('estudios1')" class="selectpicker form-control">
                                         {% if dataE.1%}
                                         <option value="">Seleccione</option>
                                         <option selected="selected" class="d-none">{{ dataE.1.3 }} - {{ dataE.1.4 }}</option>
@@ -139,7 +139,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label for="estudios2">Estudios</label>
-                                    <select name="estudios2" class="form-control">
+                                    <select name="estudios2" id="estudios2" onchange="estudio2('estudios2')" class="selectpicker form-control">
                                         {% if dataE.2 %}
                                         <option value="">Seleccione</option>
                                         <option selected="selected" class="d-none">{{ dataE.2.3 }} - {{ dataE.2.4 }}</option>
@@ -192,7 +192,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label for="idioma">Idioma</label>
-                                    <select name="idioma"  class="form-control">
+                                    <select name="idioma" id="idioma" onchange="idiomas('idioma')" class="form-control">
                                         {% if dataI.0 %}
                                         <option value="">Seleccione</option>
                                         <option selected="selected" class="d-none">{{ dataI.0.3 }} - {{ dataI.0.4 }}</option>
@@ -229,7 +229,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label for="idioma1">Idioma</label>
-                                    <select name="idioma1" class="form-control">
+                                    <select name="idioma1" id="idioma1" onchange="idiomas1('idioma1')" class="form-control">
                                         {% if dataI.1 %}
                                         <option value="">Seleccione</option>
                                         <option selected="selected" class="d-none">{{ dataI.1.3 }} - {{ dataI.1.4 }}</option>
@@ -266,7 +266,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label for="idioma2">Idioma</label>
-                                    <select name="idioma2" class="form-control">
+                                    <select name="idioma2" id="idioma2" onchange="idiomas2('idioma2')" class="form-control">
                                         {% if dataI.2 %}
                                         <option value="">Seleccione</option>
                                         <option selected="selected" class="d-none">{{ dataI.2.3 }} - {{ dataI.2.4 }}</option>
@@ -318,7 +318,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label for="Herramientas">Herramientas técnicas *</label>
-                                    <select name="Herramientas"  class="form-control">
+                                    <select name="Herramientas" id="Herramientas" onchange="herramirenta('Herramientas')" class="form-control">
                                         {% if dataT.0 %}
                                         <option value="">Seleccione</option>
                                         <option selected="selected" class="d-none">{{ dataT.0.3 }} - {{ dataT.0.4 }}</option>
@@ -356,7 +356,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label for="Herramientas1">Herramientas técnicas</label>
-                                    <select name="Herramientas1" class="form-control">
+                                    <select name="Herramientas1" id="Herramientas1" onchange="herramirenta1('Herramientas1')" class="form-control">
                                         {% if dataT.1 %}
                                         <option value="">Seleccione</option>
                                         <option selected="selected" class="d-none">{{ dataT.1.3 }} - {{ dataT.1.4 }}</option>
@@ -394,7 +394,7 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label for="Herramientas2">Herramientas técnicas</label>
-                                    <select name="Herramientas2" class="form-control">
+                                    <select name="Herramientas2" id="Herramientas2" onchange="herramirenta2('Herramientas2')" class="form-control">
                                         {% if dataT.2 %}
                                         <option value="">Seleccione</option>
                                         <option selected="selected" class="d-none">{{ dataT.2.3 }} - {{ dataT.2.4 }}</option>
@@ -527,86 +527,233 @@
 
     }
 
-    function direccion(input) {
-        dir = document.getElementById('iddireccion').value;
-        dir1 = document.getElementById('iddireccion1').value;
-        dir2 = document.getElementById('iddireccion2').value;
+    function descripcio(input) {
+        var descriptALL = document.getElementById('descript').value; 
+        var descriptACT = document.getElementById('descripcion').value;
+        var indice = descriptALL.indexOf(descriptACT);
+        if(indice !== -1){
+            alert('Nombre de perfil ya utilizado, debe seleccionar otro');
+            document.getElementById('descripcion').value = "";
+        }
+    }
 
-        if (dir === dir1) {
-            if (dir != "") {
-                alert('Direccion ya seleccionada, debe elegir otra');
-                document.getElementById('iddireccion').value = "";
+    function checkfield() {
+        var start = document.getElementById('start').value;
+        var end = document.getElementById('end').value;
+
+        if (end != "") {
+            if (start > end) {
+                alert('La fecha desde no puese ser mayor a la de hasta, ingresela nuevamente, usted ha ingresado');
+                document.getElementById('end').value = "";
             }
         }
 
-        if (dir === dir2) {
-            if (dir1 != "") {
-                alert('Direccion ya seleccionada, debe elegir otra');
-                document.getElementById('iddireccion').value = "";
+        var start1 = document.getElementById('start1').value;
+        var end1 = document.getElementById('end1').value;
+        if (end1 != "") {
+            if (start1 > end1) {
+                alert('La fecha desde no puese ser mayor a la de hasta, ingresela nuevamente, usted ha ingresado');
+                document.getElementById('end1').value = "";
+            }
+        }
 
+        var start2 = document.getElementById('start2').value;
+        var end2 = document.getElementById('end2').value;
+        if (end2 != "") {
+            if (start2 > end2) {
+                alert('La fecha desde no puese ser mayor a la de hasta, ingresela nuevamente, usted ha ingresado');
+                document.getElementById('end2').value = "";
             }
         }
     }
 
-    function direccion1(input) {
-        dir = document.getElementById('iddireccion').value;
-        dir1 = document.getElementById('iddireccion1').value;
-        dir2 = document.getElementById('iddireccion2').value;
+    function estudio(input) {
+        dir = document.getElementById('estudios').value;
+        dir1 = document.getElementById('estudios1').value;
+        dir2 = document.getElementById('estudios2').value;
+
+        if (dir === dir1) {
+            if (dir != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('estudios').value = "";
+            }
+        }
+
+        if (dir === dir2) {
+            if (dir != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('estudios').value = "";
+
+            }
+        }
+        
+    }
+
+    function estudio1(input) {
+        dir = document.getElementById('estudios').value;
+        dir1 = document.getElementById('estudios1').value;
+        dir2 = document.getElementById('estudios2').value;
 
         if (dir1 === dir) {
             if (dir1 != "") {
-                alert('Direccion ya seleccionada, debe elegir otra');
-                document.getElementById('iddireccion1').value = "";
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('estudios1').value = "";
             }
         }
 
         if (dir1 === dir2) {
             if (dir1 != "") {
-                alert('Direccion ya seleccionada, debe elegir otra');
-                document.getElementById('iddireccion1').value = "";
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('estudios1').value = "";
 
             }
         }
     }
-    function direccion2(input) {
-        dir = document.getElementById('iddireccion').value;
-        dir1 = document.getElementById('iddireccion1').value;
-        dir2 = document.getElementById('iddireccion2').value;
+    function estudio2(input) {
+        dir = document.getElementById('estudios').value;
+        dir1 = document.getElementById('estudios1').value;
+        dir2 = document.getElementById('estudios2').value;
 
         if (dir2 === dir) {
             if (dir2 != "") {
-                alert('Direccion ya seleccionada, debe elegir otra');
-                document.getElementById('iddireccion2').value = "";
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('estudios2').value = "";
             }
         }
 
         if (dir2 === dir1) {
             if (dir2 != "") {
-                alert('Direccion ya seleccionada, debe elegir otra');
-                document.getElementById('iddireccion2').value = "";
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('estudios2').value = "";
+
+            }
+        }
+    }
+    function idiomas(input) {
+        dir = document.getElementById('idioma').value;
+        dir1 = document.getElementById('idioma1').value;
+        dir2 = document.getElementById('idioma2').value;
+
+        if (dir === dir1) {
+            if (dir != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('idioma').value = "";
+            }
+        }
+
+        if (dir === dir2) {
+            if (dir != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('idioma').value = "";
+
+            }
+        }
+        
+    }
+
+    function idiomas1(input) {
+        dir = document.getElementById('idioma').value;
+        dir1 = document.getElementById('idioma1').value;
+        dir2 = document.getElementById('idioma2').value;
+
+        if (dir1 === dir) {
+            if (dir1 != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('idioma1').value = "";
+            }
+        }
+
+        if (dir1 === dir2) {
+            if (dir1 != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('idioma1').value = "";
+
+            }
+        }
+    }
+    function idiomas2(input) {
+        dir = document.getElementById('idioma').value;
+        dir1 = document.getElementById('idioma1').value;
+        dir2 = document.getElementById('idioma2').value;
+
+        if (dir2 === dir) {
+            if (dir2 != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('idioma2').value = "";
+            }
+        }
+
+        if (dir2 === dir1) {
+            if (dir2 != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('idioma2').value = "";
 
             }
         }
     }
 
-    /*
-            var puesto = document.getElementById(puesto).value;
-            alert('puesto') */
+    function herramirenta(input) {
+        dir = document.getElementById('Herramientas').value;
+        dir1 = document.getElementById('Herramientas1').value;
+        dir2 = document.getElementById('Herramientas2').value;
 
-
-
-    /*         if (desde > hasta){
-            alert('La fecha desde no puede ser mayor a la fecha hasta');
-            a = 1; */
-
-
-
-    /*         var puesto = document.getElementById(puesto).value;
-            var tarea = document.getElementById(tarea).value;
-    
-            hasta = document.getElementById(end).value;
+        if (dir === dir1) {
+            if (dir != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('Herramientas').value = "";
+            }
         }
-        */
+
+        if (dir === dir2) {
+            if (dir != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('Herramientas').value = "";
+
+            }
+        }
+        
+    }
+
+    function herramirenta1(input) {
+        dir = document.getElementById('Herramientas').value;
+        dir1 = document.getElementById('Herramientas1').value;
+        dir2 = document.getElementById('Herramientas2').value;
+
+        if (dir1 === dir) {
+            if (dir1 != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('Herramientas1').value = "";
+            }
+        }
+
+        if (dir1 === dir2) {
+            if (dir1 != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('Herramientas1').value = "";
+
+            }
+        }
+    }
+    function herramirenta2(input) {
+        dir = document.getElementById('Herramientas').value;
+        dir1 = document.getElementById('Herramientas1').value;
+        dir2 = document.getElementById('Herramientas2').value;
+
+        if (dir2 === dir) {
+            if (dir2 != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('Herramientas2').value = "";
+            }
+        }
+
+        if (dir2 === dir1) {
+            if (dir2 != "") {
+                alert('Atributo ya seleccionado, debe elegir otro');
+                document.getElementById('Herramientas2').value = "";
+
+            }
+        }
+    }
 </script>
 
 {% endblock%}

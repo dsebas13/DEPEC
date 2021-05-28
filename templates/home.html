@@ -4,12 +4,6 @@
 {% block body %}
 <h1> Bienvenido {{session['name']}} {{session['surname']}}  </h1>
 
-{% if session['rol'] == 1 %}
-<h1>Su rol es: 'Admin'</h1>
-{% else %}
-<h1>Su rol es: 'user'</h1>
-{% endif %}
-
 
 
 

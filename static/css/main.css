@@ -1,7 +1,7 @@
 body {
-  background: #12c2e9;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #f64f59, #c471ed, #12c2e9);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background-color: #8EC5FC;
+background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+
 }
 
 .redondeado {
@@ -100,6 +100,8 @@ background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); /* W3C, IE 10+
   }
 
   footer{
+    font-size: xx-small;
+    color: white;
     text-align: right;
     height: 3vh;
     width: 100vw;
@@ -113,7 +115,6 @@ background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); /* W3C, IE 10+
 
 
   .footer2{
-
     height: 2vh;
     width: 100vw;
     display: flex;
@@ -161,6 +162,74 @@ background: linear-gradient(to right, #f64f59, #c471ed, #12c2e9); /* W3C, IE 10+
 .editaratrib {
   display: flex;
 }
+
+
+.editaratrib .buttatrib {
+  width: 10%;
+  height: 40px;
+  border-radius: 6px;
+  background-color: lightblue;
+  border: none;
+}
+
+.editbutt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position:relative;
+  left:15%;
+  width: 30%;
+  height: 35px;
+  border-radius: 6px;
+  background-color: lightblue;
+  border: none;
+}
+
+.buttoneliminar {
+
+  margin: 0px -50px; 
+  position:relative;
+  top:30%; 
+  left:60%;
+  width: 50%;
+  height: 40px;
+  border-radius: 6px;
+  background-color: lightcoral;
+  border: none;
+  
+}
+
+.aeliminar {
+  margin-top: -53px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position:relative;
+  left:55%;
+  width: 30%;
+  height: 35px;
+  border-radius: 6px;
+  background-color: lightcoral;
+  border: none;
+  
+}
+
+.cveliminar {
+  margin-top: -40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position:relative;
+  top: -5px;
+  left:55%;
+  width: 40%;
+  height: 45px;
+  border-radius: 6px;
+  background-color: lightcoral;
+  border: none;
+  
+}
+
 
 .editaratrib > p {
   margin: 0;
