@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class="position-fixed" style="left: 50px;">
-    <button style="left: 200; background-color: #ff6961; color: white;" class="btn" onclick="goBack()">Regresar</button>
+    <a style="left: 200; color: black;" onclick="goBack()"><i class="fas fa-arrow-circle-left fa-2x"></i></a>
 
     <script>
         function goBack() {
@@ -15,13 +15,6 @@
 <div class="row">
     <div class="col md-5">
         <form action="/updatejobs/{{busqueda.0}}" method="POST">
-            <div class="position-fixed" style="right: 20px;">
-
-                <button type="submit" class="btn btn-primary" rigth style="float: right">
-                    Actualizar datos
-                </button>
-
-            </div>
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
@@ -34,83 +27,116 @@
                         </p>
                         <div class="row">
                             <div class="col-sm-12">
-                                <h5>Datos de la vacante
-                                    <small class="pull-right" rigth style="float: right">
-                                        <span class="text-danger">*</span>
-                                        &nbsp; Campos Obligatorios &nbsp; &nbsp;
-                                    </small>
+                                <small class="pull-right" rigth style="float: right">
+                                    <span class="text-danger">*</span>
+                                    &nbsp; Campos Obligatorios &nbsp; &nbsp;
+                                </small>
                                 </h5>
                             </div>
                         </div>
                         </p>
                         <div class="row">
                             <div class="col-sm-4">
-                                <label for="iddireccion"></label>Dirección *</label>
-                                <select name="iddireccion" id="iddireccion"  required class="selectpicker form-control">
-                                    <option selected="selected" class="d-none">{{ busqueda.9 }} - {{ busqueda.10 }}</option>
-                                    {% for d in direcccio %}
-                                    <option value="{{ d.0 }}">{{ d.0 }} - {{ d.1 }}</option>
-                                    {% endfor %}    
-                                </select>
+                                <label for="iddireccion"></label>Dirección</label><br>
+                                <br>
+                                <input type="hidden" name="iddireccion" id="iddireccion"
+                                    value="{{direccio.0}} - {{direccio.1}}">
+                                <label for="namedireccion">{{direccio.1}}</label>
                             </div>
                             &nbsp; &nbsp; &nbsp;
                             <div class="col-sm-4">
                                 <label for="puesto"></label>Puesto *</label>
                                 <input type="text" name="puesto" placeholder="Descripción del cargo" required
-                                    minlength="2" maxlength="50" size="50" class="form-control" value="{{ busqueda.2 }}"> 
+                                    minlength="2" maxlength="50" size="50" class="form-control"
+                                    value="{{ busqueda.2 }}">
                             </div>
                         </div>
-                        </br>
+                        <br>
+
                         </br>
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="fecha">Fecha de publicación:</label>
-                                <input type="date" id="start" name="fecha"
-                                max="{{ busqueda.12 }}" min="{{ busqueda.11 }}"  value="{{ busqueda.3 }}" class="form-control">
+                                <input type="date" id="start" name="fecha" max="{{ busqueda.12 }}"
+                                    min="{{ busqueda.11 }}" value="{{ busqueda.3 }}" class="form-control">
                             </div>
-                            <div class="col-sm-4" >
+                            <div class="col-sm-4">
                                 <label for="vacantes"></label>Cantidad de vacantes *</label>
                                 <input type="number" name="vacantes" placeholder="Ingrese cantidad de puestos a ocupar"
                                     required minlength="1" maxlength="20" value="{{ busqueda.4 }}" class="form-control">
                             </div>
                         </div>
                         </br>
-                        </br>
                         <div class="row">
-                            <div class="col-sm-4">
-                                <label for="alcance"></label>Alcance *</label>
-                                <input type="text" name="alcance" placeholder="Ingrese el alcance del puesto" required
-                                    minlength="2" maxlength="100" value="{{ busqueda.5 }}" class="form-control">
+                            <div class="col-sm-5">
+                                <label for="perfil"></label>Perfiles *</label>
+                                <select onchange="mostrarBoton('perfil')" name="perfil" id="perfil" required
+                                    class="selectpicker form-control">
+                                    <option value="{{busqueda.13}}">{{busqueda.13}} - {{busqueda.14}} </option>
+                                    {% for p in dataperfil %}
+                                    <option value="{{ p.0 }}">{{ p.0 }} - {{ p.1 }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
-                            <div class="col-sm-4">
-                                <label for="tareas"></label>Tareas *</label>
-                                <input type="text" name="tareas" placeholder="Ingrese las tareas" required
-                                    minlength="2" maxlength="100" value="{{ busqueda.6 }}" class="form-control">
+                            <a class="btn btn-primary" onclick="verAtributos('perfil')" id="btnVer"
+                                style="display: none; margin: 14px;">Ver Atributos</a>
+
+                        </div>
+                        </br>
+
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <label for="alcance"></label>Alcance: *</label>
+                                <textarea name="alcance" required placeholder="Ingrese el alcance del puesto" required
+                                    rows="1" cols="150" class="form-control">{{ busqueda.5 }}
+                                </textarea>
                             </div>
                         </div>
-
-                        </br>
-                        </br>
-                            <div class="col-sm-4">
-                                <label for="contacto">Contacto</label>
-                                <input type="email" name="contacto" placeholder="Ingrese un email de contacto" required minlength="4"
-                                    maxlength="50" value="{{ busqueda.7 }}" class="form-control">
+                        <br>
+                        <br>
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <label for="tareas"></label>Tareas *</label>
+                                <textarea name="tareas" required placeholder="Ingrese las tareas" required rows="1"
+                                    cols="150" class="form-control">{{ busqueda.6 }}
+                                </textarea>
                             </div>
                         </div>
                     </div>
-                </div>
-                <br>
-                <br>
-                <div class="form group">
-
+                    </br>
+                    </br>
                 </div>
             </div>
+
+            <button type="submit" class="btn btn-primary" rigth style="float: right; right: -50px; margin-top: -90px;"
+                data-bs-toggle="tooltip" data-bs-placement="top" title="Actualizar búsqueda">
+                <i class="far fa-save fa-2x"></i>
+            </button>
 
 
 
         </form>
     </div>
 </div>
+
+<script>
+
+
+    function mostrarBoton() {
+        var perfil = document.getElementById('perfil').value;
+        if (perfil != "") {
+            btnVer.style.display = 'inline';
+        }
+        else {
+            btnVer.style.display = 'none';
+        }
+    }
+
+    function verAtributos() {
+        var perfil = document.getElementById('perfil').value;
+        window.location = "/veratributos/" + perfil;
+    }
+</script>
 
 
 {% endblock %}

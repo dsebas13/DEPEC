@@ -3,8 +3,7 @@
 {% block body %}
 
 <div class="position-fixed" style="left: 50px;">
-    <button style="left: 200; background-color: #ff6961; color: white;" class="btn" onclick="goBack()">Regresar</button>
-
+    <a style="left: 200; color: black;" onclick="goBack()"><i class="fas fa-arrow-circle-left fa-2x"></i></a>
     <script>
         function goBack() {
             window.history.back();
@@ -19,23 +18,16 @@
     <div class="row">
         <div class="col md-5">
             <form action="/addnuevopuesto" method="POST">
-                <div class="position-fixed" style="right: 50px;">
-
-                    <button type="submit" class="btn" rigth style="float: right; background-color: rgba(75, 95, 150, 0.815);color: white;">
-                        Crear Busqueda
-                    </button>
-                </div>
                 <div class="container">
                     <div class="card card-body">
                         <div class="box-container container">
                             </p>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <h5>Datos de la vacante
-                                        <small class="pull-right" rigth style="float: right">
-                                            <span class="text-danger">*</span>
-                                            &nbsp; Campos Obligatorios &nbsp; &nbsp;
-                                        </small>
+                                    <small class="pull-right" rigth style="float: right">
+                                        <span class="text-danger">*</span>
+                                        &nbsp; Campos Obligatorios &nbsp; &nbsp;
+                                    </small>
                                     </h5>
                                 </div>
                             </div>
@@ -59,7 +51,7 @@
                             </br>
                             <div class="row">
                                 <div class="col-sm-5">
-                                    <label for="fecha">Fecha:</label>
+                                    <label for="fecha">Fecha: *</label>
                                     <input type="date" id="start" name="fecha" class="form-control"
                                         value="{{ direccio.2 }}" min="{{ direccio.2 }}" max="{{ direccio.3 }}">
                                 </div>
@@ -74,14 +66,16 @@
                             <div class="row">
                                 <div class="col-sm-5">
                                     <label for="perfil"></label>Perfiles *</label>
-                                    <select onchange="mostrarBoton('perfil')" name="perfil" id="perfil" required class="selectpicker form-control">
+                                    <select onchange="mostrarBoton('perfil')" name="perfil" id="perfil" required
+                                        class="selectpicker form-control">
                                         <option value=""></option>
                                         {% for p in dataperfil %}
                                         <option value="{{ p.0 }}">{{ p.0 }} - {{ p.1 }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
-                                    <a class="btn btn-primary" onclick="verAtributos('perfil')" id="btnVer" style="display: none; margin: 14px;" >Ver Atributos</a>
+                                <a class="btn btn-primary" onclick="verAtributos('perfil')" id="btnVer"
+                                    style="display: none; margin: 14px;">Ver Atributos</a>
 
                             </div>
                             </br>
@@ -109,6 +103,11 @@
                         </div>
                     </div>
                 </div>
+                <button type="submit" class="btn btn-primary" rigth
+                    style="float: right; right: -50px; margin-top: -90px;"
+                    data-bs-toggle="tooltip" data-bs-placement="top" title="Crear búsqueda">
+                    <i class="far fa-save fa-2x"></i>
+                </button>
             </form>
         </div>
     </div>
@@ -117,10 +116,10 @@
 
 <script>
 
-    
-    function mostrarBoton () {
+
+    function mostrarBoton() {
         var perfil = document.getElementById('perfil').value;
-        if (perfil != "" ) {
+        if (perfil != "") {
             btnVer.style.display = 'inline';
         }
         else {
@@ -128,9 +127,9 @@
         }
     }
 
-    function verAtributos () {
+    function verAtributos() {
         var perfil = document.getElementById('perfil').value;
-        window.location="/veratributos/"+perfil;
+        window.location = "/veratributos/" + perfil;
     }
 </script>
 

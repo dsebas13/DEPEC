@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{% if busqueda %}
+{% if session['rol'] == 1 %}
+
+<div class="position-fixed" style="left: 100px;">
+    
+    <h2 class="position-fixed" style="margin-top: -10px;">Mis Búsquedas: Evaluar candidatos</h2>
+    <br>
+    <!--
+    <a href="/nuevopuesto" class="btn btn-primary" rigth style="float: right">Nuevo</a> -->
+
+</div>
+{% endif %}
+<br>
+<br>
+<div class="row">
+    <div class="col md-7">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <br>
+
+        {% for b in busqueda %}
+        
+        <div class="card text-black bg-white mb-2" style="display: block;">
+            
+            <div class="card-body">
+                <h4 class="card-title">{{ b.2 }} | {{b.9}}</h4>
+                <p class="card-text"> {{ b.18 }} </p>
+                <p class="card-text"> Vacantes: {{ b.11 }} </p>
+                <a href="/verpostulados/{{b.2}}" class="btn btn-success btn-sm">Ver</a>
+                {% for contar in contaReg  %}
+                {% if contar.0 == b.2 %}
+                <button type="button" class="btn btn-primary btn-sm">Postulados: {{ contar.1 }} </button>
+                {% endif %}
+                {% endfor %}               
+            </div>
+        </div>
+        
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<h2> No hay agentes postulados a sus busquedas </h2>
+{% endif %}
+{% endblock %}

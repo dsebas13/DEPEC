@@ -33,18 +33,34 @@
         </li>
         &nbsp;
         &nbsp;
-        {% if session['id']  == 1 %}
+        {% if session['rol']  == 1 %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-            aria-expanded="false">Busqueda</a>
+            aria-expanded="false">Búsqueda</a>
           <div class="dropdown-menu">
             <a class="dropdown-item" href="/gridjobs">Busquedas Activas</a>
-            <a class="dropdown-item" href="/mygridjobs">Mis Busquedas</a>
+            <a class="dropdown-item" href="/mygridjobs">Mis Búsquedas</a>
           </div>
         </li>
         {% else %}
         <li class="nav-item">
           <a class="nav-link" href="/gridjobs">Busquedas Activas</a>
+        </li>
+        {% endif %}
+        &nbsp;
+        &nbsp;
+        {% if session['rol']  == 1 %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+            aria-expanded="false">Postulación</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/mispostulaciones">Mis Postulaciones</a>
+            <a class="dropdown-item" href="/evaluarpostulaciones">Evaluar Candidatos</a>
+          </div>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="/mispostulaciones">Mis Postulaciones</a>
         </li>
         {% endif %}
         &nbsp;
@@ -74,6 +90,10 @@
         <input class="form-control mr-sm-2" type="text" placeholder="Search">
         <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
       </form> -->
+      <h5 style="color: white;">Usuario: {{session['name'].capitalize()}} {{session['surname'].capitalize()}}&#10;{%if session['rol'] == 1 %}Rol: Admin {% else %}Rol: User {% endif %}</h5><br>
+      
+      
+      &nbsp;
       <a data-bs-toggle="tooltip" data-bs-placement="top" title="Usuario: {{session['name'].capitalize()}} {{session['surname'].capitalize()}}&#10;{%if session['rol'] == 1 %}Rol: Admin {% else %}Rol: User {% endif %}" 
       href="/logout" class="btn btn-primary" style="float: right;"><i class="fas fa-user"></i></a>
       &nbsp;
@@ -103,7 +123,7 @@
     <h5 class="footer2"> Desarrollo Personal de Carrera
 
     </h5>
-    <h5>Version: 0.2 &nbsp;&nbsp;&nbsp;&nbsp;  </h5>
+    <h5>Version: 0.3 &nbsp;&nbsp;&nbsp;&nbsp;  </h5>
   </div>
   <div>
 

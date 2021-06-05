@@ -1,9 +1,8 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div class="position-fixed" style="left: 100px;">
-  <button style="left: 200; background-color: #ff6961; color: white;" class="btn" onclick="goBack()">Regresar</button>
-
+<div class="position-fixed" style="left: 50px;">
+  <a style="left: 200; color: black;" onclick="goBack()"><i class="fas fa-arrow-circle-left fa-2x"></i></a>
   <script>
     function goBack() {
       window.history.back();

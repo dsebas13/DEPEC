@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="col md-7">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <div class="position-fixed" style="left: 50px;">
+            <a style="color: black;" href="/evaluarpostulaciones"><i class="fas fa-arrow-circle-left fa-2x"></i></a>
+        </div>
+        <br>
+        <table class="table table-striped table-bordered bg-white table-sm">
+            <h2>Candidatos para la busqueda: {{data.0.10}}</h2>
+            <br>
+            <thead>
+                <tr>
+                    <td>Dni</td>
+                    <td>Nombre</td>
+                    <td>Apellido</td>
+                    <td>Telefono</td>
+                    <td>Email</td>
+                    <td>Fecha Postulacion</td>
+                    <td style="text-align:center;">Seleccion</td>
+                    <td style="text-align:center;">CV</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in data %}
+                <tr>
+                    <td> {{ d.0 }} </td>
+                    <td> {{ d.1 }} </td>
+                    <td> {{ d.2 }} </td>
+                    <td> {{ d.3 }}</td>
+                    <td> {{ d.4 }} </td>
+                    <td> {{ d.5 }} </td>
+                    <td style="text-align:center;">
+                        <form action="/seleccionpostulacion/{{d.8}}" method="POST">
+                        {% if d.6 == 1 %}
+                            <input type="hidden" name="seleccion" id="seleccion" value="{{d.6}}">
+                            <input type="hidden" name="idPostulacion" id="idPostulacion" value="{{d.9}}">
+                            <button style="border: 0;" type="submit" data-bs-toggle="tooltip" data-bs-placement="top" title="Seleccionado"><i class="far fa-check-square fa-2x"></i></button>
+                        {% else %}
+                            <input type="hidden" name="seleccion" id="seleccion" value="{{d.6}}">
+                            <input type="hidden" name="idPostulacion" id="idPostulacion" value="{{d.9}}">
+                            <button style="border: 0;" type="submit" data-bs-toggle="tooltip" data-bs-placement="top" title="Seleccinar"><i class="far fa-square fa-2x"></i></button>
+                        {% endif %}
+                        </form>
+                    </td>
+                    <td style="text-align:center;">
+                        <form action="/bajarcv" method="POST">
+                            <input type="hidden" name="b64" id="b64" value="{{d.7}}">
+                            <input type="hidden" name="idBusqueda" id="idBusqueda" value="{{d.8}}">
+                            <input type="hidden" name="nameuser" id="nameuser" value="{{d.1}} {{d.2}}">
+                            <button style="border: 0;" type="submit" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar CV"><i class="fas fa-download fa-2x"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% endblock %}

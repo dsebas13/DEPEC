@@ -45,6 +45,7 @@
         </form>
         <br>
         {% for b in busqueda %}
+        {% if b.8 == 1 %}
         {% if b.3 <= b.14 %}
         <div class="card text-black bg-white mb-2" style="display: block;">
 
@@ -53,22 +54,24 @@
                 <p class="card-text"> {{ b.11 }} </p>
                 <p class="card-text">Vacantes: {{ b.4 }} </p>
                 <a href="/viewjob/{{b.0}}" class="btn btn-sm" style="background-color: grey; color: white;" >Ver</a>
-                <button type="button" class="btn btn-sm" data-bs-toggle="tooltip" style="background-color:tomato; color: white;" data-bs-placement="top" title="Dias de publicada la busqueda">Dias: {{ b.13 }} </button>
+                <button type="button" class="btn btn-sm" data-bs-toggle="tooltip" style="background-color:tomato; color: white;" data-bs-placement="top" title="Dias de publicada la búsqueda">Dias: {{ b.13 }} </button>
                 {% if b.7 == session['id'] %}
-                <button rigth style="float: right; background-color: #ffcd6c; color: white;"  type="button" class="btn btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Mi busqueda activa"><i class="fas fa-info"></i> </button>
+                <button rigth style="float: right; background-color: #ffcd6c; color: white;"  type="button" class="btn btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Mi búsqueda activa"><i class="fas fa-info"></i> </button>
 
                 <!-- <a href="/deletejobs/{{b.0}}" class="btn btn-warning btn-sm btn-delete" rigth style="float: right">Eliminar</a>
                 <a href="/editjobs/{{b.0}}" class="btn btn-info btn-sm" rigth style="float: right">Editar</a> -->
                 {% endif %}
                 {% for user in UserPostulacion %}
                 {% if user.2 == b.0 %}
-                <button rigth style="float: right; background-color: #93c08c; color: white;"  type="button" class="btn btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Usuario Postulado a la Busqueda el: {{user.3}}"><i class="fas fa-clipboard-check"></i></button>
+                <button rigth style="float: right; background-color: #93c08c; color: white;"  type="button" class="btn btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Usuario Postulado a la Búsqueda el: {{user.3}}"><i class="fas fa-clipboard-check"></i></button>
                 {% endif %}
                 {% endfor %}
             </div>
 
         </div>
         {% endif %}
+        {% endif %}
+
         {% endfor %}
     </div>
 </div>

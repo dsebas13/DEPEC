@@ -2,16 +2,12 @@
 
 {% block body %}
 {% if session['rol'] == 1 %}
-<div class="position-fixed" style="left: 10px;">
-    <h2 class="position-fixed" style="margin-top: -10px;">Mis Busquedas</h2>
-    <!-- <a href="/nuevopuesto" class="btn btn-primary" rigth style="float: right">Nuevo</a> -->
 
-</div>
-<div class="position-fixed" style="right: 100px;">
-    
-    <a href="/nuevopuesto" class="btn btn-success" rigth style="float: right;"><i class="fas fa-plus"></i> Nuevo</a>
+<h2>
+    Mis Búquedas
+    <a href="/nuevopuesto" class="btn " rigth style="float: right; background-color: #8fed8f; color: white;" class="btn" ><i class="fas fa-plus"></i></a>
+</h2>
 
-</div>
 {% endif %}
 
 <div class="row">
@@ -26,29 +22,77 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        
+
         {% endfor %}
         {% endif %}
         {% endwith %}
         <br>
+        <br>
+        <br>
         {% for b in busqueda %}
-        
+        {%if b.8 == 3 or b.8 == 2 %}
+        <div class="card text-black mb-2"
+        style="display: block; background-color: rgb(207, 207, 207);">
+
+        {% else %}
         <div class="card text-black bg-white mb-2" style="display: block;">
-            
+        {% endif %}
             <div class="card-body">
                 <h4 class="card-title">{{ b.0 }} | {{b.2}}</h4>
                 <p class="card-text"> {{ b.11 }} </p>
                 <p class="card-text"> Vacantes: {{ b.4 }}</p>
-                <a href="/viewjob/{{b.0}}" class="btn btn-sm" style="background-color: grey; color: white;">Ver</a>
+                {%if b.8 == 3 %}
+                <a href="/viewjob/{{b.0}}" class="btn btn-sm" style="background-color: rgb(207, 207, 207); color: white;">Ver</a>
+                <button type="button" class="btn btn-sm" style="background-color:rgb(207, 207, 207); color: white;">Dias: {{ b.13 }} </button>
+                {% else %}
+                <a href="/viewjob/{{b.0}}" class="btn btn-success btn-sm";>Ver</a>
                 <button type="button" class="btn btn-sm" style="background-color:tomato; color: white;">Dias: {{ b.13 }} </button>
+                {% if b.8 == 2 %}
+                <a class="btn btn-sm" style="background-color: gray;">Búsqueda
+                    Inactiva</a>
+                {% endif %}
+                {% endif %}
                 {% if session['rol'] == 1 %}
-                <a href="/deletejobs/{{b.0}}" class="btn btn-sm btn-delete" rigth style="float: right; background-color: lightblue;">Eliminar</a>
-                <a href="/editjobs/{{b.0}}" class="btn btn-sm" rigth style="float: right; background-color: #ab3fff; color: white;" >Editar</a>
+                {% if b.8 == 1 or b.8 == 2 %}
+                <a href="/editjobs/{{b.0}}" class="btn btn-sm" rigth
+                    style="float: right; background-color: #ab3fff; color: white; margin-right: 85px;"><i
+                        class="far fa-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar búsqueda"></i></a>
+                <a href="/deletejobs/{{b.0}}" class="btn btn-sm btn-delete" rigth
+                    style="float: right; background-color: lightblue; margin-right: -83px; "><i
+                        class="fas fa-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar búsqueda"></i></a>
+                <form action="/lockjobs/{{b.0}}" method="POST">
+                    <input type="hidden" name="lockbusqueda" id="lockbusqueda" value="{{b.8}}">
+                    <button type="submit" class="btn btn-sm btn-lock" rigth
+                        style="float: right; background-color: lightblue; margin-top: -25px;" data-bs-toggle="tooltip" data-bs-placement="top" title="Cerrar búsqueda"><i class="fas fa-lock-open"></i></a>
+                </form>
+                {% endif %}
+
+                {% if b.8 == 1 %}
+                <form action="/cambiarjobs/{{b.0}}" method="POST">
+                    <input type="hidden" name="statebusqueda" id="statebusqueda" value="{{b.8}}">
+                    <button type="submit" class="btn btn-sm" rigth
+                        style="float: right; background-color:darkgoldenrod; color: white; margin-right: 57px;  margin-top: -25px;"><i
+                            class="fas fa-pause" data-bs-toggle="tooltip" data-bs-placement="top" title="Pausar búsqueda"></i></button>
+                </form>
+                {% endif %}
+                {% if b.8 == 2 %}
+                <form action="/cambiarjobs/{{b.0}}" method="POST">
+                    <input type="hidden" name="statebusqueda" id="statebusqueda" value="{{b.8}}">
+                    <button type="submit" class="btn btn-sm" rigth
+                        style="float: right; background-color:green; color: white; margin-right: 57px; ; margin-top: -25px; "><i
+                            class="far fa-play-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Activar búsqueda"></i></button>
+                </form>
+                {% endif %}
+                {% if b.8 == 3 %}
+                <a class="btn btn-sm" rigth
+                    style="float: right; background-color: red; color: white; margin-top: -25px;"><i
+                        class="fas fa-lock" data-bs-toggle="tooltip" data-bs-placement="top" title="Búsqueda cerrada"></i></a>
+                {% endif %}
                 {% endif %}
             </div>
         </div>
 
-        
+
         {% endfor %}
     </div>
 </div>

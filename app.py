@@ -7,6 +7,7 @@ import fitz
 import os
 from os import remove
 from base64 import b64decode
+import webbrowser as wb
 
 
 #mySql conection
@@ -226,7 +227,7 @@ def gridjobs():
         data = cur.fetchall()
     cur.execute('SELECT * FROM postulacion where IdUsuario = %s',[session['id']])
     UserPostulacion = cur.fetchall()
-    cur.execute('SELECT direccion.IdDireccion, direccion.nombre as dia FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion where busqueda.fechaPublicacion <= CURRENT_DATE group by direccion.IdDireccion order by direccion.IdDireccion')
+    cur.execute('SELECT direccion.IdDireccion, direccion.nombre as dia FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion where busqueda.fechaPublicacion <= CURRENT_DATE and busqueda.IdEstado = "1" group by direccion.IdDireccion order by direccion.IdDireccion')
     direc = cur.fetchall()
     print(data)
     print(UserPostulacion)
@@ -279,12 +280,16 @@ def editjobs(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html')
+    print(id)
     if session['rol'] == 1:
-        cur.execute('SELECT *,CURRENT_DATE as dia FROM direccion')
-        direc = cur.fetchall()
-        cur.execute('SELECT *,CURRENT_DATE as dia, DATE_ADD(CURRENT_DATE,INTERVAL 30 DAY) as mastreinta FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion WHERE busqueda.IdBusqueda = {0}'.format(id))
+        cur.execute('SELECT direccion.IdDireccion, direccion.nombre ,CURRENT_DATE as dia, DATE_ADD(CURRENT_DATE,INTERVAL 30 DAY) as mastreinta FROM direccion join usuario on direccion.IdDireccion = usuario.IdDireccion WHERE IdUsuario = %s',[session['id']])
+        direc = cur.fetchone()
+        cur.execute('SELECT *,CURRENT_DATE as dia, DATE_ADD(CURRENT_DATE,INTERVAL 30 DAY) as mastreinta FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion join perfil on busqueda.IdPerfil = perfil.IdPerfil WHERE busqueda.IdBusqueda = {0}'.format(id))
         data = cur.fetchall()
-        return render_template('editjobs.html', busqueda = data[0], direcccio = direc)
+        cur.execute('SELECT IdPerfil, descripcion from perfil where IdPerfil != (SELECT perfil.IdPerfil FROM perfil join busqueda on perfil.IdPerfil = busqueda.Idperfil WHERE busqueda.IdBusqueda = %s)',[id])
+        dataperfil = cur.fetchall()
+        print(dataperfil)
+        return render_template('editjobs.html', busqueda = data[0], direccio = direc, dataperfil = dataperfil)
     else:
         return render_template('home.html')  
 
@@ -297,6 +302,7 @@ def updatejobs(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
+    print(request.form)
     if request.method == 'POST':
         IdDireccion = str(request.form['iddireccion'][:2])
         puesto = request.form['puesto']
@@ -304,7 +310,7 @@ def updatejobs(id):
         vacantes = request.form['vacantes']
         alcance = request.form['alcance']
         tareas = request.form['tareas']
-        contacto = request.form['contacto']
+        IdPerfil = request.form['perfil']
         cur = mysql.connection.cursor()
         cur.execute("""
             UPDATE busqueda
@@ -313,12 +319,12 @@ def updatejobs(id):
                 fechaPublicacion = %s,
                 vacantes = %s,
                 alcance = %s,
-                tareas = %s,
-                contacto = %s
-            WHERE id = %s
-        """, (IdDireccion, puesto, fechaPublicacion, vacantes, alcance, tareas, contacto, id))
+                tarea = %s,
+                IdPerfil = %s
+            WHERE IdBusqueda = %s
+        """, (IdDireccion, puesto, fechaPublicacion, vacantes, alcance, tareas, IdPerfil, id))
         mysql.connection.commit()
-        flash('Puesto actualizado correctamente')
+        flash('Busqueda actualizada correctamente')
         return redirect(url_for('mygridjobs'))
 
 # post nuevo puesto
@@ -362,6 +368,7 @@ def add_cv():
         return render_template('login.html') 
     if request.method == 'POST':
         f = request.files['archivo']
+
         # Guardamos el archivo en el directorio "Archivos PDF"
         
         f.save(os.path.join(app.config['UPLOAD_FOLDER'], f.filename))
@@ -571,24 +578,6 @@ def delete_cv(id):
     flash('Contact Removed Successfully')
     return redirect(url_for('gridcv'))
 
-# borrado de puesto           
-@app.route('/deletejobs/<string:id>')
-def deletejobs(id):
-    cur = mysql.connection.cursor()
-    if 'loggedin' in session:
-        pass
-    else:        
-        flash('Sesion vencida o cerrada')
-        return render_template('login.html') 
-    if session['rol'] == 1:
-        cur = mysql.connection.cursor()
-        cur.execute('DELETE FROM busqueda WHERE id = {0}'.format(id))
-        mysql.connection.commit()
-        flash('Puesto Removed Successfully')
-        return redirect(url_for('gridjobs'))
-    else:
-        return render_template('home.html')
-
 # post nueva postulacion
 @app.route('/postular/<string:id>', methods= ['POST'])
 def postular(id):
@@ -609,6 +598,202 @@ def postular(id):
         mysql.connection.commit()
         flash('Postulacion correcta')
         return redirect(url_for('gridjobs'))
+
+# pantalla postulaciones
+@app.route('/mispostulaciones')
+def mispostulaciones():
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    cur.execute('SELECT *,datediff(CURRENT_DATE, busqueda.fechaPublicacion) as dias, CURRENT_DATE FROM postulacion join busqueda on postulacion.IdBusqueda = busqueda.IdBusqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion where postulacion.IdUsuario = %s order by dias asc', [session['id']] )
+    data = cur.fetchall()
+    print(data)
+    return render_template('gridpostulacion.html', busqueda = data)
+
+# pantalla cambiar postulacion
+@app.route('/cambiarmipostulacion/<string:id>', methods= ['POST'])
+def cambiarmipostulacion(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html')
+    IdPostulacion = id
+    estadoPostulacion = request.form['statepostulacion']
+    if estadoPostulacion == '1':
+        unoocero = 2
+    else:
+        unoocero = 1
+    print(unoocero)
+    cur.execute("""
+        UPDATE postulacion 
+        SET IdEstado = %s
+        WHERE IdPostulacion = %s
+    """, (unoocero, IdPostulacion))
+    mysql.connection.commit()
+    flash('Operacion realizada correctamente')
+    return redirect(url_for('mispostulaciones'))
+
+# cambiar estado busqueda
+@app.route('/cambiarjobs/<string:id>', methods= ['POST', 'GET'])
+def cambiarjobs(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html')
+    IdBusqueda = id
+    estadoBusqueda = request.form['statebusqueda']
+    if estadoBusqueda == '1':
+        unoocero = 2
+    else:
+        unoocero = 1
+    print(unoocero)
+    cur.execute("""
+        UPDATE busqueda 
+        SET IdEstado = %s
+        WHERE IdBusqueda = %s
+    """, (unoocero, IdBusqueda))
+    mysql.connection.commit()
+    flash('Operacion realizada correctamente')
+    return redirect(url_for('mygridjobs'))  
+
+# cambiar estado busqueda
+@app.route('/lockjobs/<string:id>', methods= ['POST', 'GET'])
+def lockjobs(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html')
+    print(request.form)
+    IdBusqueda = id
+    lockBusqueda = request.form['lockbusqueda']
+    if lockBusqueda == '1' or lockBusqueda == '2':
+        unoocero = 3
+    cur.execute("""
+        UPDATE busqueda 
+        SET IdEstado = %s
+        WHERE IdBusqueda = %s
+    """, (unoocero, IdBusqueda))
+    mysql.connection.commit()
+    flash('Operacion realizada correctamente')
+    return redirect(url_for('mygridjobs'))  
+
+
+# borrado de atributo           
+@app.route('/deletejobs/<string:id>', methods = ['POST', 'GET'])
+def deletejobs(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    
+    print(request.form)
+    if session['rol'] == 1:
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM postulacion WHERE IdBusqueda = %s', [id])
+        data = cur.fetchall()
+        print(data)
+        if data:
+            flash('Hay postulados uno o mas agentes a la busqueda, no se puede eliminar')
+            return redirect(url_for('mygridjobs', id = id))
+        cur.execute('DELETE FROM busqueda WHERE IdBusqueda = %s', [id])
+        mysql.connection.commit()
+        flash('Busqueda eliminada exitosamente')
+        return redirect(url_for('mygridjobs'))
+    else:
+        return render_template('home.html') 
+
+# pantalla evaluarpostulaciones
+@app.route('/evaluarpostulaciones')
+def evaluarpostulaciones():
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    cur.execute('SELECT *,datediff(CURRENT_DATE, busqueda.fechaPublicacion) as dias, CURRENT_DATE FROM postulacion join busqueda on postulacion.IdBusqueda = busqueda.IdBusqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion where busqueda.IdUsuario = %s and postulacion.IdEstado = "1" GROUP by postulacion.IdBusqueda order by dias desc ', [session['id']] )
+    data = cur.fetchall()
+    cur.execute('SELECT postulacion.IdBusqueda, COUNT(*) as cantidad FROM postulacion JOIN busqueda on busqueda.IdBusqueda = postulacion.IdBusqueda WHERE busqueda.IdUsuario = %s GROUP by postulacion.IdBusqueda', [session['id']])
+    contaReg = cur.fetchall()
+    return render_template('evaluarpostulacion.html', busqueda = data, contaReg = contaReg)
+ 
+
+
+# pantalla ver postulaciones
+@app.route('/verpostulados/<string:id>')
+def verpostulados(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    cur.execute('SELECT usuario.dni, usuario.nombre, usuario.apellido, cv.telefono ,usuario.email, postulacion.fechaPostulacion, postulacion.seleccionado, cv.CvBase64, postulacion.IdBusqueda, postulacion.IdPostulacion, busqueda.puesto FROM postulacion JOIN usuario on usuario.IdUsuario = postulacion.IdUsuario JOIN cv on cv.IdUsuario = postulacion.IdUsuario join busqueda on busqueda.IdBusqueda = postulacion.IdBusqueda WHERE postulacion.IdBusqueda = %s and busqueda.IdUsuario = %s and postulacion.IdEstado = "1"', [id, session['id']]) 
+    data = cur.fetchall()
+    cur.execute('SELECT postulacion.IdBusqueda, COUNT(*) as cantidad FROM postulacion JOIN busqueda on busqueda.IdBusqueda = postulacion.IdBusqueda join usuario on postulacion.IdUsuario = usuario.IdUsuario WHERE busqueda.IdUsuario = %s GROUP by postulacion.IdBusqueda', [session['id']])
+    contaReg = cur.fetchall()
+    if data:
+        return render_template('verpostulados.html', data = data, contaReg = contaReg)
+    else:
+        return redirect(url_for('evaluarpostulaciones'))
+# cambiar seleccion postulacion
+@app.route('/seleccionpostulacion/<string:id>', methods= ['POST'])
+def seleccionpostulacions(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    print(request.form)
+    seleccion = request.form['seleccion']
+    
+    IdPostulacion = request.form['idPostulacion']
+    if seleccion == '1':
+        unoocero = 0
+        fechaSeleccionado = ""
+    else:
+        unoocero = 1
+        fechaSeleccionado = datetime.now()
+    cur.execute("""
+        UPDATE postulacion 
+        SET seleccionado = %s,
+            fechaSeleccionado = %s
+        WHERE IdPostulacion = %s
+    """, (unoocero, fechaSeleccionado, IdPostulacion))
+    mysql.connection.commit()
+    flash('Operacion realizada correctamente')
+    return redirect(url_for('verpostulados', id = id))
+
+
+
+@app.route('/bajarcv', methods= ['POST'])
+def bajarcv():
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+    id = request.form['idBusqueda']
+    b64 = request.form['b64']
+    bytes = b64decode(b64, validate=True)
+    nombrearchivo = request.form['nameuser']
+    f = open('./Archivos PDF/'+ nombrearchivo + '.pdf', 'wb')
+    f.write(bytes)
+    wb.open_new(r'C:/Users/a1/Desktop/flask/Archivos PDF/'+ nombrearchivo + '.pdf')
+    f.close()
+    flash('Operacion realizada correctamente')
+    return redirect(url_for('verpostulados', id = id))
 
 # pantalla puestos cargados
 @app.route('/mygridjobs')
@@ -708,8 +893,6 @@ def edit_atributo(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    print(id)
-    print(request.form)
     if request.method == 'POST':
         atributo = request.form['atribNew']
         fechaCreacion = datetime.now()
@@ -1156,7 +1339,3 @@ def logout():
 
 if __name__ == '__main__':
     app.run(port = 3000, debug = True)
-
-
-
-

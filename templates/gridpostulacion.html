@@ -1,0 +1,83 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{% if busqueda %}
+{% if session['rol'] == 1 %}
+
+<h2>Mis Postulaciones</h2>
+
+
+{% endif %}
+
+<div class="row">
+    <div class="col md-7">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <br>
+
+        {% for b in busqueda %}
+        {% if b.15 == 1 and b.4 == 2%}
+        <div class="card text-black mb-2" style="display: block; border: red 5px solid">
+            {% elif b.15 == 2%}
+            <div class="card text-black mb-2"
+                style="display: block; background-color: rgb(207, 207, 207); border: rgb(207, 207, 207) 5px solid">
+                {% elif b.15 == 3%}
+                <div class="card text-black mb-2"
+                    style="display: block; background-color: rgb(207, 207, 207);">
+                    {% else %}
+                    <div class="card text-black bg-white mb-2" style="display: block;">
+
+                        {% endif %}
+                        <div class="card-body">
+                            <h4 class="card-title">{{ b.2 }} | {{b.9}}</h4>
+                            <p class="card-text"> {{ b.18 }} </p>
+                            <p class="card-text"> Vacantes: {{ b.11 }} | Fecha de postulación: {{ b.3 }} </p>
+                            {% if b.15 == 3 %}
+                            <a href="/viewjob/{{b.2}}" class="btn btn btn-sm" style="background-color: rgb(207, 207, 207);">Ver</a>
+                            <button type="button" class="btn btn btn-sm" style="background-color: rgb(207, 207, 207);">Dias: {{ b.20 }} </button>
+                            {% else %}
+                            <a href="/viewjob/{{b.2}}" class="btn btn-success btn-sm">Ver</a>
+                            <button type="button" class="btn btn-primary btn-sm">Dias: {{ b.20 }} </button>
+                            {% endif %}
+                            {% if b.15 == 1 %}
+                            <form action="/cambiarmipostulacion/{{b.0}}" method="POST">
+                                <input type="hidden" name="statepostulacion" id="statepostulacion" value="{{b.4}}">
+                                {% if b.4 == 1 %}
+                                <button type="submit" class="btn btn-success btn-sm btn-postu" rigth
+                                    style="float: right; margin-top: -25px;">Inactivar mi postulación</button>
+                                {% elif b.4 == 2 %}
+                                <button type="submit" class="btn btn-danger btn-sm" rigth
+                                    style="float: right; margin-top: -25px;">Activar mi postulación</button>
+                                {% endif %}
+                            </form>
+                            {% elif b.15 == 2 %}
+                            <a class="btn btn-sm" rigth style="float: right;  background-color: gray;">Búsqueda
+                                Inactiva</a>
+                            {% else %}
+                            <a class="btn btn-sm" rigth style="float: right; background-color: red; color: white;"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Búsqueda Cerrada"><i
+                                    class="fas fa-lock"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                    &nbsp;
+                </div>
+            </div>
+            {% else %}
+            <h2>Aún no se ha postulado a ninguna busqueda</h2>
+            {% endif %}
+            {% endblock %}
