@@ -4,17 +4,16 @@
 {% if busqueda %}
 {% if session['rol'] == 1 %}
 
-<div class="position-fixed" style="left: 100px;">
+<div  style="left: 100px;">
     
-    <h2 class="position-fixed" style="margin-top: -10px;">Mis Búsquedas: Evaluar candidatos</h2>
-    <br>
+    <h2 style="margin-top: -10px;">Mis Búsquedas: Evaluar candidatos</h2>
+
     <!--
     <a href="/nuevopuesto" class="btn btn-primary" rigth style="float: right">Nuevo</a> -->
 
 </div>
 {% endif %}
-<br>
-<br>
+
 <div class="row">
     <div class="col md-7">
         {% with messages = get_flashed_messages() %}

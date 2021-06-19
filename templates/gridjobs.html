@@ -19,61 +19,140 @@
         {% endif %}
         {% endwith %}
         <form action="/gridjobs" method="POST">
+            <h3>Busquedas Activas</h3>
             <div class="card text-black bg-white mb-2" style="display: block;" data-toggle="collapse">
                 <div class="card-body">
+                    <h5>Filtros de búsqueda</h5>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-4">
 
-                    <div class="col-sm-4">
-
-                        <label for="iddireccion"></label>Dirección *</label>
-                        <select name="iddireccion" id="iddireccion" class="selectpicker form-control">
-                            <option value="1">Todas</option>
-                            {% for d in direcccio %}
-                            <option value="{{ d.0 }}">{{ d.0 }} - {{ d.1 }}</option>
-                            {% endfor %}
-                        </select>
-
+                            <label for="iddireccion"></label>Dirección</label>
+                            <select name="iddireccion" id="iddireccion" class="selectpicker form-control">
+                                {% if seleccion.0 %}
+                                {% if seleccion.0 != "T" %}
+                                <option value="{{ seleccion.0 }}">{{seleccion.0}} - {{ dir.0  }}</option>
+                                {% endif %}
+                                {% endif %}
+                                <option value="T">Todas</option>
+                                {% for d in direcccio %}
+                                <option value="{{ d.0 }}">{{ d.0 }} - {{ d.1 }}</option>
+                                {% endfor %}
+                                
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="fechaIngreso">Fecha Desde:</label>
+                            </br>
+                            {% if seleccion.1 != "0" %}
+                            <input type="date" id="start" name="fechaIngreso" onchange="checkfield('start')"
+                            class="form-control" max="{{busqueda.0.21}}" value="{{seleccion.1}}">
+                            {% else %}
+                            <input type="date" id="start" name="fechaIngreso" onchange="checkfield('start')"
+                                class="form-control" max="{{busqueda.0.21}}">
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="fechaIngreso">Fecha Hasta:</label>
+                            </br>
+                            {% if seleccion.2 != "0" %}
+                            <input type="date" id="end" name="fechaEgreso" onchange="checkfield('start')"
+                                class="form-control" max="{{busqueda.0.21}}" value="{{seleccion.2}}">
+                            {% else %}
+                            <input type="date" id="end" name="fechaEgreso" onchange="checkfield('start')"
+                            class="form-control" max="{{busqueda.0.21}}">
+                            {% endif %}
+                        </div>
                     </div>
-                    <button type="submit" class="btn" rigth style="float: right; background-color: #8fed8f; color: white;" >
-                        Buscar
+                    <a rigth style="float: right; border-radius: 22px; margin-left: 30px;" class="btn" href="/gridjobs"><i
+                            class="fas fa-eraser" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar filtros"></i></a>
+                    
+                    <button type="submit" class="btn" rigth
+                        style="float: right; background-color: #8fed8f; color: white; border-radius: 22px;" >
+                        <i class="fas fa-search" data-bs-toggle="tooltip" data-bs-placement="top" title="Buscar"></i>
                     </button>
+
+                    <div class="row">
+                        <div class="col-sm-4">   
+                            <div class="custom-control form-control-lg custom-checkbox">
+                                {% if seleccion.3 %}
+                                {% if seleccion.3 == "1" %}
+                                <input name="formcheck" value="formcheckMP" checked type="radio" id="customCheck">
+                                {% else %}
+                                <input name="formcheck" value="formcheckMP"  type="radio" id="customCheck">
+                                {% endif %}
+                                {% else %}
+                                <input name="formcheck" value="formcheckMP"  type="radio" id="customCheck">
+                                {% endif %}
+                                <label for="customCheck">Mis Postulaciones</label>     
+                            </div>                          
+                        </div>
+                        {%if session['rol'] == 1 %}
+                        <div class="col-sm-4">
+                            <div class="custom-control form-control-lg custom-checkbox">
+                                {% if seleccion.3 %}
+                                {% if seleccion.3 == "2" %}
+                                <input name="formcheck" checked value="formcheckMB"  type="radio" id="customCheck1">
+                                {% else %}
+                                <input name="formcheck" value="formcheckMB"  type="radio" id="customCheck1">
+                                {% endif %}
+
+                                {% else %}
+                                <input name="formcheck" value="formcheckMB"  type="radio" id="customCheck1">
+                                {% endif %}
+                                
+                                <label for="customCheck1">Mis Busquedas</label>
+                                
+                            </div>
+                        </div>
+                        {% endif %}
+                        </br>
+                        </br>
+                    </div>
                 </div>
-
-                </br>
-                </br>
-
             </div>
         </form>
+
+        
+
         <br>
+
         {% for b in busqueda %}
         {% if b.8 == 1 %}
-        {% if b.3 <= b.14 %}
-        <div class="card text-black bg-white mb-2" style="display: block;">
+        {% if b.3 <= b.21 %} <div class="card text-black bg-white mb-2" style="display: block;">
 
             <div class="card-body">
                 <h4 class="card-title">{{ b.0 }} | {{b.2}}</h4>
                 <p class="card-text"> {{ b.11 }} </p>
                 <p class="card-text">Vacantes: {{ b.4 }} </p>
-                <a href="/viewjob/{{b.0}}" class="btn btn-sm" style="background-color: grey; color: white;" >Ver</a>
-                <button type="button" class="btn btn-sm" data-bs-toggle="tooltip" style="background-color:tomato; color: white;" data-bs-placement="top" title="Dias de publicada la búsqueda">Dias: {{ b.13 }} </button>
+                <a href="/viewjob/{{b.0}}" class="btn btn-sm" style="background-color: grey; color: white;">Ver</a>
+                <button type="button" class="btn btn-sm" data-bs-toggle="tooltip"
+                    style="background-color:tomato; color: white;" data-bs-placement="top"
+                    title="Dias de publicada la búsqueda">Dias: {{ b.20 }} </button>
                 {% if b.7 == session['id'] %}
-                <button rigth style="float: right; background-color: #ffcd6c; color: white;"  type="button" class="btn btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Mi búsqueda activa"><i class="fas fa-info"></i> </button>
+                <button rigth style="float: right; background-color: #ffcd6c; color: white;" type="button"
+                    class="btn btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Mi búsqueda activa"><i
+                        class="fas fa-info"></i> </button>
 
                 <!-- <a href="/deletejobs/{{b.0}}" class="btn btn-warning btn-sm btn-delete" rigth style="float: right">Eliminar</a>
                 <a href="/editjobs/{{b.0}}" class="btn btn-info btn-sm" rigth style="float: right">Editar</a> -->
                 {% endif %}
                 {% for user in UserPostulacion %}
                 {% if user.2 == b.0 %}
-                <button rigth style="float: right; background-color: #93c08c; color: white;"  type="button" class="btn btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Usuario Postulado a la Búsqueda el: {{user.3}}"><i class="fas fa-clipboard-check"></i></button>
+                <button rigth style="float: right; background-color: #93c08c; color: white;" type="button"
+                    class="btn btn-sm" data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Usuario Postulado a la Búsqueda el: {{user.3.strftime('%d-%m-%Y')}}"><i
+                        class="fas fa-clipboard-check"></i></button>
                 {% endif %}
                 {% endfor %}
             </div>
 
-        </div>
-        {% endif %}
-        {% endif %}
-
-        {% endfor %}
     </div>
+    {% endif %}
+    {% endif %}
+
+    {% endfor %}
+</div>
 </div>
 
 

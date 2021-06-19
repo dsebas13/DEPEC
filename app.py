@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 from datetime import datetime
 from flask_mysqldb import MySQL
 import base64
@@ -130,13 +130,38 @@ def gridcv():
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    cur.execute('SELECT * FROM cv join usuario on cv.IdUsuario = usuario.IdUsuario')
+    cur.execute('SELECT * FROM cv join usuario on cv.IdUsuario = usuario.IdUsuario join direccion on usuario.IdDireccion = direccion.IdDireccion where cv.IdUsuario != %s', [session['id']])
     data = cur.fetchall()
     #cv del usuario
-    cur.execute('SELECT * FROM cv join usuario on cv.IdUsuario = usuario.IdUsuario WHERE dni = %s', [session['dni']])
+    cur.execute('SELECT * FROM cv join usuario on cv.IdUsuario = usuario.IdUsuario  join direccion on usuario.IdDireccion = direccion.IdDireccion WHERE dni = %s', [session['dni']])
     datacv = cur.fetchall()
     return render_template('gridcv.html', cv = data, cvuser = datacv)
 
+# pantalla ver cv
+@app.route('/viewcv/<string:id>')
+def viewcv(id):
+    cur = mysql.connection.cursor()
+    if 'loggedin' in session:
+        pass
+    else:        
+        flash('Sesion vencida o cerrada')
+        return render_template('login.html') 
+    ###datos ingresados por el usuario en tabla cv
+    cur.execute('SELECT * FROM cv join usuario on cv.IdUsuario = usuario.IdUsuario join direccion on usuario.IdDireccion = direccion.Iddireccion WHERE cv.IdCV = {0}'.format(id))
+    cvuser = cur.fetchone()
+
+    cur.execute('SELECT cvdireccion.IdCV, cvdireccion.IdDireccion, direccion.nombre, cvdireccion.FechaDesde, cvdireccion.FechaHasta, cvdireccion.Puesto, cvdireccion.Tarea FROM cvdireccion join direccion on cvdireccion.IdDireccion = direccion.IdDireccion WHERE cvdireccion.IdCV = {0}'.format(id))
+    cvdireccion = cur.fetchall()    ### direcciones del usuario
+    cur.execute('SELECT cvatributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, nivel.IdNivel, nivel.nivel FROM cvatributo join atributo on cvatributo.IdAtributo = atributo.IdAtributo join nivel on cvatributo.IdNivel = nivel.IdNivel WHERE cvatributo.IdCV = %s and atributo.tipoAtributo = "I" ', [id])
+    dataI = cur.fetchall()
+    cur.execute('SELECT cvatributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, nivel.IdNivel, nivel.nivel FROM cvatributo join atributo on cvatributo.IdAtributo = atributo.IdAtributo join nivel on cvatributo.IdNivel = nivel.IdNivel WHERE cvatributo.IdCV = %s and atributo.tipoAtributo = "E" ', [id])
+    dataE = cur.fetchall()
+    cur.execute('SELECT atributo.IdAtributo, cvatributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM cvatributo right join atributo on cvatributo.IdAtributo = atributo.IdAtributo and cvatributo.IdCV = %s WHERE atributo.tipoAtributo = "A" ', [id])
+    dataA = cur.fetchall()
+    cur.execute('SELECT cvatributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, nivel.IdNivel, nivel.nivel FROM cvatributo join atributo on cvatributo.IdAtributo = atributo.IdAtributo join nivel on cvatributo.IdNivel = nivel.IdNivel WHERE cvatributo.IdCV = %s and atributo.tipoAtributo = "T" ', [id])
+    dataT = cur.fetchall()
+
+    return render_template('viewcv.html',cvuser = cvuser, id = id, dataI = dataI ,dataE = dataE, dataT = dataT ,dataA = dataA, cvdireccion = cvdireccion)
         
 # pantalla edicion cv
 @app.route('/edit/<string:id>')
@@ -148,31 +173,30 @@ def get_cv(id):
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
     ###datos ingresados por el usuario en tabla cv
-    cur.execute('SELECT * FROM cv join usuario on cv.IdUsuario = usuario.IdUsuario WHERE cv.IdCV = {0}'.format(id))
-    cvuser = cur.fetchone()
-    b64 = cvuser[5]
-    bytes = b64decode(b64, validate=True)
 
-# Perform a basic validation to make sure that the result is a valid PDF file
-# Be aware! The magic number (file signature) is not 100% reliable solution to validate PDF files
-# Moreover, if you get Base64 from an untrusted source, you must sanitize the PDF contents
-    # Write the PDF contents to a local file
-    f = open('./templates/file.pdf', 'wb')
-    f.write(bytes)
-    f.close()
-
-
-    cur.execute('SELECT * FROM cvatributo join nivel on cvatributo.IdNivel = nivel.IdNivel WHERE cvatributo.IdCV = {0}'.format(id))
-    atribuser = cur.fetchall()
+    cur.execute('SELECT cvdireccion.IdCV, cvdireccion.IdDireccion, direccion.nombre, cvdireccion.FechaDesde, cvdireccion.FechaHasta, cvdireccion.Puesto, cvdireccion.Tarea FROM cvdireccion join cv on cvdireccion.IdCV = cv.IdCV join direccion on cvdireccion.IdDireccion = direccion.IdDireccion WHERE IdUsuario = %s',[session['id']])
+    cvdireccion = cur.fetchall()    ### direcciones del usuario
+    print(cvdireccion)
+    cur.execute('SELECT * FROM cv WHERE IdUsuario = %s',[session['id']])   #### cv del usuario
+    cvUser = cur.fetchone()
     cur.execute('SELECT direccion.IdDireccion,direccion.nombre FROM direccion group by direccion.IdDireccion order by direccion.IdDireccion')
     direc = cur.fetchall()
-    cur.execute('SELECT *,DATE_ADD(fechaNacimiento,INTERVAL 18 YEAR) as mayoredad,CURRENT_DATE as hoy FROM usuario join direccion on usuario.IdUsuario=direccion.IdDireccion WHERE dni = %s', [session['dni']])
+    cur.execute('SELECT *,DATE_ADD(fechaNacimiento,INTERVAL 18 YEAR) as mayoredad,CURRENT_DATE as hoy FROM usuario join direccion on usuario.IdDireccion=direccion.IdDireccion WHERE dni = %s', [session['dni']])
     data = cur.fetchone()
     cur.execute('SELECT * FROM atributo group by atributo order by atributo')
     atrib = cur.fetchall()
     cur.execute('SELECT * FROM nivel order by IdNivel')
     level = cur.fetchall()
-    return render_template('edit-cv.html', cv = data[0], direcccio = direc, atrib = atrib, level = level)
+    cur.execute('SELECT cvatributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, nivel.IdNivel, nivel.nivel FROM cvatributo join atributo on cvatributo.IdAtributo = atributo.IdAtributo join nivel on cvatributo.IdNivel = nivel.IdNivel WHERE cvatributo.IdCV = %s and atributo.tipoAtributo = "I" ', [id])
+    dataI = cur.fetchall()
+    cur.execute('SELECT cvatributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, nivel.IdNivel, nivel.nivel FROM cvatributo join atributo on cvatributo.IdAtributo = atributo.IdAtributo join nivel on cvatributo.IdNivel = nivel.IdNivel WHERE cvatributo.IdCV = %s and atributo.tipoAtributo = "E" ', [id])
+    dataE = cur.fetchall()
+    cur.execute('SELECT atributo.IdAtributo, cvatributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM cvatributo right join atributo on cvatributo.IdAtributo = atributo.IdAtributo and cvatributo.IdCV = %s WHERE atributo.tipoAtributo = "A" ', [id])
+    dataA = cur.fetchall()
+    cur.execute('SELECT cvatributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, nivel.IdNivel, nivel.nivel FROM cvatributo join atributo on cvatributo.IdAtributo = atributo.IdAtributo join nivel on cvatributo.IdNivel = nivel.IdNivel WHERE cvatributo.IdCV = %s and atributo.tipoAtributo = "T" ', [id])
+    dataT = cur.fetchall()
+
+    return render_template('edit-cv.html', id = id, dataI = dataI ,dataE = dataE, dataT = dataT ,dataA = dataA, cvdireccion = cvdireccion, cvUser = cvUser, cv = data, direcccio = direc, atrib = atrib, level = level)
 
 
 # pantalla vista de un puesto cargado
@@ -214,24 +238,60 @@ def gridjobs():
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
+    sqlwhere = "SELECT *,datediff(CURRENT_DATE, fechaPublicacion) as dias,CURRENT_DATE from busqueda JOIN direccion on direccion.IdDireccion = busqueda.IdDireccion LEFT JOIN postulacion on postulacion.IdBusqueda = busqueda.IdBusqueda WHERE busqueda.IdEstado = '1' AND busqueda.fechaPublicacion <= CURRENT_DATE " 
+    seleccion = []
+    dir = 0
+    print(request.form)
     if request.form:
-        if request.form['iddireccion'] == '1':
-            cur.execute('SELECT *,datediff(CURRENT_DATE, fechaPublicacion) as dias,CURRENT_DATE FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion order by dias')
-            data = cur.fetchall()
+        direccion = request.form['iddireccion']
+        if request.form['iddireccion'] != "T":
+            sqlwhere = sqlwhere + " and busqueda.IdDireccion = " + direccion
+            seleccion.append(direccion)
+            cur.execute('SELECT nombre FROM direccion where IdDireccion = %s',[seleccion])
+            dir = cur.fetchone()
         else:
-            filtrodireccion = str(request.form['iddireccion'][:2])
-            cur.execute('SELECT *,datediff(CURRENT_DATE, fechaPublicacion) as dias,CURRENT_DATE FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion where busqueda.IdDireccion = %s order by dias', [filtrodireccion])
-            data = cur.fetchall()
+            seleccion.append(direccion)
+        if request.form['fechaIngreso']:
+            start =  request.form['fechaIngreso']
+            sqlwhere = sqlwhere + " and busqueda.fechaPublicacion >= '"  + start + "' "
+            seleccion.append(start)
+        else:
+            seleccion.append("0")
+        if request.form['fechaEgreso']:
+            end =  request.form['fechaEgreso']
+            sqlwhere = sqlwhere + " and busqueda.fechaPublicacion <= '" + end + "' "
+            seleccion.append(end)
+        else:
+            seleccion.append("0")
+        if request.form.getlist('formcheck'):
+            idUsuario = session['id']
+            if request.form['formcheck'] == "formcheckMP":
+                sqlwhere = sqlwhere + " and postulacion.IdUsuario = " + str(idUsuario)
+                seleccion.append("1")
+            else:
+                sqlwhere = sqlwhere + " and busqueda.IdUsuario = " + str(idUsuario)
+                seleccion.append("2")
+        else:
+            seleccion.append("0")
+        cur.execute(sqlwhere + " GROUP by busqueda.IdBusqueda order by dias")
+        data = cur.fetchall()  
     else:
-        cur.execute('SELECT *,datediff(CURRENT_DATE, fechaPublicacion) as dias,CURRENT_DATE FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion order by dias')
+        cur.execute(sqlwhere + "GROUP by busqueda.IdBusqueda order by dias")
         data = cur.fetchall()
+    print(seleccion)
     cur.execute('SELECT * FROM postulacion where IdUsuario = %s',[session['id']])
     UserPostulacion = cur.fetchall()
     cur.execute('SELECT direccion.IdDireccion, direccion.nombre as dia FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion where busqueda.fechaPublicacion <= CURRENT_DATE and busqueda.IdEstado = "1" group by direccion.IdDireccion order by direccion.IdDireccion')
     direc = cur.fetchall()
-    print(data)
-    print(UserPostulacion)
-    return render_template('gridjobs.html', UserPostulacion = UserPostulacion, busqueda = data, direcccio = direc)
+
+    if not data:
+        flash('No existen busquedas con los parametros ingresados')
+        return redirect(url_for('gridjobs'))
+    if not dir:
+        return render_template('gridjobs.html', UserPostulacion = UserPostulacion, busqueda = data, direcccio = direc, seleccion = seleccion )
+    return render_template('gridjobs.html', UserPostulacion = UserPostulacion, busqueda = data, direcccio = direc, seleccion = seleccion, dir = dir)
+
+
 # post nuevo puesto
 @app.route('/mostrargrilla', methods= ['POST'])
 def mostrargrilla():
@@ -542,26 +602,135 @@ def updatecv(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
+    print(request.form)
     if request.method == 'POST':
-        nombre = request.form['nombre']
-        apellido = request.form['apellido']
-        dni = request.form['dni']
+        telefonoOld = request.form['telephoneOld']
         telefono = request.form['telefono']
-        email = request.form['email']
-        birthdate = request.form['birthdate']
-        cur = mysql.connection.cursor()
-        cur.execute("""
+        f = request.files['archivo']
+        fechaCreacion = datetime.now()
+        if f:
+            # Guardamos el archivo en el directorio "Archivos PDF"
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], f.filename))
+            ### pdf a texto
+            pdf_doc = f.filename
+            documento = fitz.open(pdf_doc)
+            for pagina in documento:
+                texto = pagina.getText().encode("utf8")
+            ### pdf a base 64
+            with open((os.path.join(app.config['UPLOAD_FOLDER'], f.filename)), "rb") as pdf_file:
+                encoded_string = base64.b64encode(pdf_file.read())
+            CvRead = texto
+            CvBase64 = encoded_string
+            cur.execute("""
             UPDATE cv
-            SET nombre = %s,
-                apellido = %s,
-                dni = %s,
-                telefono = %s,
-                email = %s,
-                birthdate = %s
-            WHERE id = %s
-        """, (nombre, apellido, dni, telefono, email, birthdate, id))
+            SET CvRead = %s,
+                CvBase64 = %s,
+                fechaCreacion = %s
+            WHERE IdCV = %s
+            """,  (CvRead, CvBase64, fechaCreacion, id))
+        
+        cur.execute("""
+        UPDATE cv
+        SET telefono = %s,
+            fechaCreacion = %s
+        WHERE IdCV = %s
+        """,  (telefono, fechaCreacion, id))
         mysql.connection.commit()
-        flash('Contacto actualizado correctamente')
+
+        cur.execute('DELETE FROM cvdireccion where IdCV = %s', [id])
+        mysql.connection.commit()
+
+        c = 0
+        for c in range(3):
+            if c == 0:
+                IdDireccion = request.form['iddireccion']
+                FechaDesde = request.form['fechaIngreso']
+                FechaHasta = request.form['fechaEgreso']
+                Puesto = request.form['puesto']
+                Tarea = request.form['tareas']
+            else:
+                print('entro')
+                print(request.form['iddireccion' + str(c)])
+                IdDireccion = request.form['iddireccion' + str(c)]
+                FechaDesde = request.form['fechaIngreso' + str(c)]
+                FechaHasta = request.form['fechaEgreso' + str(c)]
+                Puesto = request.form['puesto' + str(c)]
+                Tarea = request.form['tareas' + str(c)]
+            if IdDireccion:
+                print('paso')
+                print(IdDireccion)
+                cur = mysql.connection.cursor() 
+                cur.execute('INSERT INTO cvdireccion (IdCV, IdDireccion, FechaDesde, FechaHasta, Puesto, Tarea) VALUES (%s, %s, %s, %s, %s, %s)',
+                (id, IdDireccion, FechaDesde, FechaHasta, Puesto, Tarea))
+                mysql.connection.commit()
+            IdDireccion = ""
+            c = c + 1
+        
+        cur.execute('DELETE FROM cvatributo where IdCV = %s', [id])
+        mysql.connection.commit()
+
+        c = 0
+        for c in range(3):
+            if c == 0:
+                print('entroestudio')
+                
+                IdAtributo = request.form['estudios']
+                IdNivel = request.form['estado']
+                print(IdAtributo)
+            else:
+                IdAtributo = request.form['estudios' + str(c)]
+                IdNivel = request.form['estado' + str(c)]
+            if IdAtributo and IdNivel:
+                print('entroestudio1')
+                print(IdAtributo)
+                cur = mysql.connection.cursor()
+                cur.execute('INSERT INTO cvatributo (IdCV, IdAtributo, IdNivel) VALUES (%s, %s, %s)',
+                (id, IdAtributo, IdNivel))
+                mysql.connection.commit()
+            IdAtributo = ""
+            c = c + 1
+
+        c = 0
+        for c in range(3):
+            if c == 0:             
+                IdAtributo = request.form['idioma']
+                IdNivel = request.form['nivel']
+            else:
+                IdAtributo = request.form['idioma' + str(c)]
+                IdNivel = request.form['nivel' + str(c)]
+            if IdAtributo and IdNivel:
+                cur = mysql.connection.cursor()
+                cur.execute('INSERT INTO cvatributo (IdCV, IdAtributo, IdNivel) VALUES (%s, %s, %s)',
+                (id, IdAtributo, IdNivel))
+                mysql.connection.commit()
+            IdAtributo = ""
+            c = c + 1
+        
+        c = 0
+        for c in range(3):
+            if c == 0:             
+                IdAtributo = request.form['Herramientas']
+                IdNivel = request.form['niveltecnico']
+            else:
+                IdAtributo = request.form['Herramientas' + str(c)]
+                IdNivel = request.form['niveltecnico' + str(c)]
+            if IdAtributo and IdNivel:
+                cur = mysql.connection.cursor()
+                cur.execute('INSERT INTO cvatributo (IdCV, IdAtributo, IdNivel) VALUES (%s, %s, %s)',
+                (id, IdAtributo, IdNivel))
+                mysql.connection.commit()
+            IdAtributo = ""
+            c = c + 1
+
+        if ('formcheck' in request.form):   
+            for f in request.form.getlist('formcheck'):
+                IdAtributo = f
+                cur = mysql.connection.cursor()
+                cur.execute('INSERT INTO cvatributo (IdCV, IdAtributo) VALUES (%s, %s)',
+                (id, IdAtributo))
+                mysql.connection.commit()
+
+        flash('CV actualizado correctamente')
         return redirect(url_for('gridcv'))
 
 # borrado de cv        
@@ -573,6 +742,11 @@ def delete_cv(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html')
+    cur.execute('SELECT * FROM cvatributo where IdCV = %s', [id])
+    cvatributs = cur.fetchall()
+    if cvatributs: 
+        flash('El cv tiene cargados uno o mas atributos, no se puede eliminar')
+        return redirect(url_for('gridcv'))
     cur.execute('DELETE FROM cv WHERE idCV = {0}'.format(id))
     mysql.connection.commit()
     flash('Contact Removed Successfully')
@@ -600,7 +774,7 @@ def postular(id):
         return redirect(url_for('gridjobs'))
 
 # pantalla postulaciones
-@app.route('/mispostulaciones')
+@app.route('/mispostulaciones',  methods= ['POST', 'GET'])
 def mispostulaciones():
     cur = mysql.connection.cursor()
     if 'loggedin' in session:
@@ -608,10 +782,32 @@ def mispostulaciones():
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    cur.execute('SELECT *,datediff(CURRENT_DATE, busqueda.fechaPublicacion) as dias, CURRENT_DATE FROM postulacion join busqueda on postulacion.IdBusqueda = busqueda.IdBusqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion where postulacion.IdUsuario = %s order by dias asc', [session['id']] )
+    sqlwhere = "SELECT *,datediff(CURRENT_DATE, busqueda.fechaPublicacion) as dias, CURRENT_DATE FROM postulacion join busqueda on postulacion.IdBusqueda = busqueda.IdBusqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion where postulacion.IdUsuario = " + str(session['id'])
+    seleccion = []
+    if request.form:
+        if request.form['fechaIngreso']:
+            start =  request.form['fechaIngreso']
+            sqlwhere = sqlwhere + " and busqueda.fechaPublicacion >= '"  + start + "' "
+            seleccion.append(start)
+        else:
+            seleccion.append("0")
+        if request.form['fechaEgreso']:
+            end =  request.form['fechaEgreso']
+            sqlwhere = sqlwhere + " and busqueda.fechaPublicacion <= '" + end + "' "
+            seleccion.append(end)
+        else:
+            seleccion.append("0")
+    cur.execute(sqlwhere + " order by dias")
     data = cur.fetchall()
-    print(data)
-    return render_template('gridpostulacion.html', busqueda = data)
+    print(seleccion)
+    if not data:
+        if start or end:
+            flash('No existen postulaciones con los parámetros ingresados')
+            return redirect(url_for('mispostulaciones'))
+        else:
+            flash('No está postulado a ninguna búsqueda')
+            return redirect(url_for('mispostulaciones'))
+    return render_template('gridpostulacion.html', busqueda = data, seleccion = seleccion)
 
 # pantalla cambiar postulacion
 @app.route('/cambiarmipostulacion/<string:id>', methods= ['POST'])
@@ -784,19 +980,17 @@ def bajarcv():
         pass
     else:        
         flash('Sesion vencida o cerrada')
-    id = request.form['idBusqueda']
     b64 = request.form['b64']
     bytes = b64decode(b64, validate=True)
-    nombrearchivo = request.form['nameuser']
+    nombrearchivo = request.form['nameuser'] + '_cv'
     f = open('./Archivos PDF/'+ nombrearchivo + '.pdf', 'wb')
     f.write(bytes)
-    wb.open_new(r'C:/Users/a1/Desktop/flask/Archivos PDF/'+ nombrearchivo + '.pdf')
-    f.close()
-    flash('Operacion realizada correctamente')
-    return redirect(url_for('verpostulados', id = id))
+    return send_file(r'C:/Users/a1/Desktop/flask/Archivos PDF/'+ nombrearchivo + '.pdf', attachment_filename=nombrearchivo +'.pdf')
+
+
 
 # pantalla puestos cargados
-@app.route('/mygridjobs')
+@app.route('/mygridjobs', methods= ['POST', 'GET'])
 def mygridjobs():
     cur = mysql.connection.cursor()
     if 'loggedin' in session:
@@ -804,14 +998,41 @@ def mygridjobs():
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html') 
-    cur.execute('SELECT *,datediff(CURRENT_DATE, fechaPublicacion) as dias,CURRENT_DATE FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion where busqueda.IdUsuario = %s order by dias', [session['id']] )
+    IdUsuarioMB = session['id']
+    sqlwhere = "SELECT *,datediff(CURRENT_DATE, fechaPublicacion) as dias,CURRENT_DATE FROM busqueda join direccion on busqueda.IdDireccion = direccion.IdDireccion where busqueda.IdUsuario = " + str(IdUsuarioMB)
+    seleccion = []
+    if request.form:
+        if request.form['fechaIngreso']:
+            start =  request.form['fechaIngreso']
+            sqlwhere = sqlwhere + " and busqueda.fechaPublicacion >= '"  + start + "' "
+            seleccion.append(start)
+        else:
+            seleccion.append("0")
+        if request.form['fechaEgreso']:
+            end =  request.form['fechaEgreso']
+            sqlwhere = sqlwhere + " and busqueda.fechaPublicacion <= '" + end + "' "
+            seleccion.append(end)
+        else:
+            seleccion.append("0")
+        if request.form.getlist('formcheck'):
+            if request.form['formcheck'] == "1":
+                sqlwhere = sqlwhere + " and busqueda.IdEstado = '1' "
+                seleccion.append("1")
+            elif request.form['formcheck'] == "2":
+                sqlwhere = sqlwhere + " and busqueda.IdEstado = '2' "
+                seleccion.append("2")
+            else:
+                sqlwhere = sqlwhere + " and busqueda.IdEstado = '3' "
+                seleccion.append("3")
+        else:
+            seleccion.append("0")
+    print(seleccion)
+    cur.execute(sqlwhere + " order by dias")
     data = cur.fetchall()
-    a = len(data)
     print(data)
-    if data:
-        return render_template('mygridjobs.html', busqueda = data, cantregistros = a)
-    else:
-        return render_template('home.html')
+    if not data:
+        flash('No existen busquedas con los parametros ingresados')
+    return render_template('mygridjobs.html', busqueda = data, seleccion = seleccion)
    
 #abm atributos
 @app.route('/atributo/<string:id>')
@@ -846,7 +1067,6 @@ def veratributos(id):
     else:        
         flash('Sesion vencida o cerrada')
         return render_template('login.html')
-    print(request.form)
     cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "I" ', [id])
     dataI = cur.fetchall()
     cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "E" ', [id])
@@ -970,6 +1190,7 @@ def editperfil(id):
         dataE = cur.fetchall()
         cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo FROM atributo left join perfil_atributo on perfil_atributo.IdAtributo = atributo.IdAtributo and perfil_atributo.IdPerfil = %s WHERE atributo.tipoAtributo = "A" ', [id])
         dataA = cur.fetchall()
+        print(dataA)
         cur.execute('SELECT perfil_atributo.IdPerfilatributo, perfil_atributo.IdPerfil, perfil.descripcion, perfil_atributo.IdAtributo, atributo.atributo, atributo.tipoAtributo, perfil_atributo.IdNivel, nivel.nivel FROM perfil_atributo join atributo on perfil_atributo.IdAtributo = atributo.IdAtributo join nivel on perfil_atributo.IdNivel = nivel.IdNivel join perfil on perfil_atributo.IdPerfil = perfil.IdPerfil WHERE perfil_atributo.IdPerfil = %s and atributo.tipoAtributo = "T" ', [id])
         dataT = cur.fetchall()
         cur.execute('SELECT descripcion FROM perfil where IdPerfil != %s',[id])
@@ -979,7 +1200,6 @@ def editperfil(id):
         atrib = cur.fetchall()
         cur.execute('SELECT * FROM nivel order by IdNivel')
         level = cur.fetchall()
-        print(data)
         return render_template('editperfil.html', descript = descript, perfil = data, dataI = dataI ,dataE = dataE, dataT = dataT ,dataA = dataA,  level = level, atrib = atrib)
     else:
         return render_template('home.html')
@@ -1339,3 +1559,7 @@ def logout():
 
 if __name__ == '__main__':
     app.run(port = 3000, debug = True)
+
+
+
+

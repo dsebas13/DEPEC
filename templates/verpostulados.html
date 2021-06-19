@@ -44,7 +44,7 @@
                     <td> {{ d.2 }} </td>
                     <td> {{ d.3 }}</td>
                     <td> {{ d.4 }} </td>
-                    <td> {{ d.5 }} </td>
+                    <td> {{ d.5.strftime('%d-%m-%Y') }} </td>
                     <td style="text-align:center;">
                         <form action="/seleccionpostulacion/{{d.8}}" method="POST">
                         {% if d.6 == 1 %}
@@ -59,11 +59,12 @@
                         </form>
                     </td>
                     <td style="text-align:center;">
-                        <form action="/bajarcv" method="POST">
+                        <form action="/bajarcv" target="_blank" method="POST">
                             <input type="hidden" name="b64" id="b64" value="{{d.7}}">
                             <input type="hidden" name="idBusqueda" id="idBusqueda" value="{{d.8}}">
                             <input type="hidden" name="nameuser" id="nameuser" value="{{d.1}} {{d.2}}">
-                            <button style="border: 0;" type="submit" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar CV"><i class="fas fa-download fa-2x"></i></button>
+                            <button type="submit" class="btn btn-sm" style="background-color: lightblue; border-radius: 12px; "><i
+                                class="fas fa-download" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar CV"></i></a>
                         </form>
                     </td>
                 </tr>

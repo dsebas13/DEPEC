@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-{% if busqueda %}
+
 {% if session['rol'] == 1 %}
 
 <h2>Mis Postulaciones</h2>
@@ -26,6 +26,47 @@
         {% endif %}
         {% endwith %}
         <br>
+        <form action="/mispostulaciones" method="POST">
+            <div class="card text-black bg-white mb-2" style="display: block;" data-toggle="collapse">
+                <div class="card-body">
+                    <h5>Filtros de búsqueda</h5>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label for="fechaIngreso">Fecha Desde:</label>
+                            </br>
+                            {% if seleccion.0 != "0" %}
+                            <input checked type="date" id="start" name="fechaIngreso" onchange="checkfield('start')"
+                                class="form-control" max="{{busqueda.0.14}}" value="{{seleccion.0}}">
+                            {% else %}
+                            <input type="date" id="start" name="fechaIngreso" onchange="checkfield('start')"
+                                class="form-control" max="{{busqueda.0.14}}">
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="fechaIngreso">Fecha Hasta:</label>
+                            </br>
+                            {% if seleccion.1 != "0" %}
+                            <input checked type="date" id="end" name="fechaEgreso" onchange="checkfield('start')"
+                                class="form-control" max="{{busqueda.0.14}}" value="{{seleccion.1}}">
+                            {% else %}
+                            <input type="date" id="end" name="fechaEgreso" onchange="checkfield('start')"
+                                class="form-control" max="{{busqueda.0.14}}">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <a rigth style="float: right; border-radius: 22px;margin-top: -30px; margin-left: 30px;" class="btn"
+                        href="/mispostulaciones"><i class="fas fa-eraser" data-bs-toggle="tooltip" data-bs-placement="top"
+                            title="Borrar filtros"></i></a>
+
+                    <button type="submit" class="btn" rigth
+                        style="float: right; background-color: #8fed8f; margin-top: -30px; color: white; border-radius: 22px;">
+                        <i class="fas fa-search" data-bs-toggle="tooltip" data-bs-placement="top" title="Buscar"></i>
+                    </button>
+                    <br>
+                </div>
+            </div>
+        </form>
 
         {% for b in busqueda %}
         {% if b.15 == 1 and b.4 == 2%}
@@ -43,7 +84,7 @@
                         <div class="card-body">
                             <h4 class="card-title">{{ b.2 }} | {{b.9}}</h4>
                             <p class="card-text"> {{ b.18 }} </p>
-                            <p class="card-text"> Vacantes: {{ b.11 }} | Fecha de postulación: {{ b.3 }} </p>
+                            <p class="card-text"> Vacantes: {{ b.11 }} | Fecha de postulación: {{ b.3.strftime('%d-%m-%Y') }} </p>
                             {% if b.15 == 3 %}
                             <a href="/viewjob/{{b.2}}" class="btn btn btn-sm" style="background-color: rgb(207, 207, 207);">Ver</a>
                             <button type="button" class="btn btn btn-sm" style="background-color: rgb(207, 207, 207);">Dias: {{ b.20 }} </button>
@@ -77,7 +118,5 @@
                     &nbsp;
                 </div>
             </div>
-            {% else %}
-            <h2>Aún no se ha postulado a ninguna busqueda</h2>
-            {% endif %}
+
             {% endblock %}

@@ -18,73 +18,87 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
-        <table id="myTable2" class="table table-striped table-bordered bg-white table-sm">
+        <table width="100%">
+            <tr>
+                <td width="10%"></td>
+                <td>
+                    <table width="100%" id="myTable2"  class="table table-striped table-bordered bg-white table-sm">
 
-            <h2>
-                {{dato}}
-                <button rigth style="float: right; background-color: #7dcf7d; color: white;" class="btn " data-toggle="modal"
-                    data-target=".bd-example-modal-sm"><i class="fas fa-plus"></i></button>
-            </h2>
-            <!-- Small modal -->
-            <br>
-            <form action="/add_atributo/{{cv.0.2}}" method="POST">
-                <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"
-                    aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-sm">
-                        <div class="modal-content">
-                            <h2 style="text-align: center;"> Nuevo </h2>
-                            <hr>
-                            &nbsp;
-                            <label for="idioma"></label> {{dato}} </label>
-                            <br>
-                            <input type="text" name="idioma" id="idioma" required placeholder="Ingrese el nuevo atributo"
-                                minlength="1" maxlength="70" size="70" class="form-control">
-                            <button type="submit" class="btn btn-primary" rigth style="float: right">
-                                Crear
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-            <thead>
-                <tr>
-                    <td style="text-align: center;"><strong>Id</strong></td>
-                    <td onclick="sortTable(1)" ><strong>{{dato}}</strong> &nbsp;&nbsp; <i class="fas fa-sort"> </i></td>
-                    <td style="text-align: center;"><strong>Nueva Descripción</strong></td>
-                    <td style="text-align: center;"><strong>Eliminar</strong></td>
-                </tr>
-            </thead>
-            <tbody>
-                {% for c in cv %}
-                <tr>
-
-                    <td style="text-align: center;"> {{ c.5 }} </td>
-                    <td> {{ c.1 }} </td>
-                    <td>
-                        <form action="/edit_atributo/{{c.2}}" method="POST">
-                            <div class="editaratrib">
-                                <input type="hidden" name="atribOld" id="atribOld" required
-                                    placeholder="Ingrese el nuevo nombre" minlength="1" maxlength="30" size="30"
-                                    class="form-control" value="{{c.1}}">
-                                <input type="text" name="atribNew" id="atribNew" required
-                                    placeholder="Ingrese el nuevo nombre" minlength="1" maxlength="30" size="30"
-                                    class="form-control">
-                                <button class="buttatrib" type="submit" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Actualizar"><i style="color: white;" class="fas fa-edit"></i></button>
+                        <h2>
+                            {{dato}}
+                            <button rigth style="float: right; background-color: #7dcf7d; color: white; border-radius: 16px;" class="btn " data-toggle="modal"
+                                data-target=".bd-example-modal-sm"><i class="fas fa-plus"></i></button>
+                        </h2>
+                        <!-- Small modal -->
+                        <br>
+                        <form action="/add_atributo/{{cv.0.2}}" method="POST">
+                            <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog"
+                                aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                        <h2 style="text-align: center;"> Nuevo </h2>
+                                        <hr>
+                                        &nbsp;
+                                        <label for="idioma"></label> {{dato}} </label>
+                                        <br>
+                                        <input type="text" name="idioma" id="idioma" required placeholder="Ingrese el nuevo atributo"
+                                            minlength="1" maxlength="70" size="70" class="form-control">
+                                        <button type="submit" class="btn btn-primary" rigth style="float: right">
+                                            Crear
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </form>
-                    </td>
-                    <td>
-                        <form action="/deleteatributo/{{c.2}}" method="POST">
-                            <input type="hidden" name="idatrib" id="idatrib" value="{{c.0}}">
-                            <button type="submit" class="buttoneliminar btn-delete" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i style="color: white;" class="fas fa-trash-alt"></i></button>
-                        </form>
-                        <!-- <a href="/deleteatributo/{{c.0}}" class="btn btn-danger">Eliminar</a> -->
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
+            
+                        <thead>
+                            <tr style="display: table; width: 100%;  min-height: 30px; box-sizing: border-box;">
+                                <td style="text-align: center; width: 6.20%;"><strong>Id</strong></td>
+                                <td style="width: 27.00%;" onclick="sortTable(1)" ><strong>{{dato}}</strong> &nbsp;&nbsp; <i class="fas fa-sort"> </i></td>
+                                <td style="text-align: center; width: 27.00%;"><strong>Nueva Descripción</strong></td>
+                                <td style="text-align: center; width: 11.5%;"><strong>Operaciones</strong></td>
+                            </tr>
+                        </thead>
+                        <tbody style="display: block; max-height: 500px; overflow-y: scroll;">
+                            {% for c in cv %}
+                            <tr style="display: table; max-height: 30px; width: 100%; box-sizing: border-box;">
+            
+                                <td style="text-align: center; width: 6.20%; vertical-align: middle"> {{ c.5 }} </td>
+                                <td style="width: 27.00%; vertical-align: middle"> {{ c.1.capitalize() }} </td>
+                                
+                                <td style="width: 27.00%;">
+                                    <form action="/edit_atributo/{{c.2}}" method="POST">
+                                            <input type="hidden" name="atribOld" id="atribOld" value="{{c.1}}">
+                                            <input type="text" name="atribNew" id="atribNew" required
+                                                placeholder="Ingrese el nuevo nombre" minlength="1" maxlength="40" size="40"
+                                                class="form-control">
+                                            
+                                </td>
+                                <td style="width: 5.00%; text-align: center; vertical-align: middle;">
+                                    <button type="submit" class="btn btn-sm"
+                                            style="background-color: lightblue; border-radius: 12px; "><i
+                                                class="fas fa-edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Actualizar nombre"></i></a>
+                                    </form>
+                                </td>
+                                <td style="width: 5.00%; text-align: center; vertical-align: middle;" >
+                                    <form action="/deleteatributo/{{c.2}}" method="POST">
+                                        <input type="hidden" name="idatrib" id="idatrib" value="{{c.0}}">
+                                        <button type="submit" class="btn btn-sm btn-delete"
+                                        style="background-color: lightblue; border-radius: 12px; "><i
+                                            class="fas fa-trash" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"></i></a>
+                                    </form>
+                                    <!-- <a href="/deleteatributo/{{c.0}}" class="btn btn-danger">Eliminar</a> -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+                <td style="width: 10%;"></td>
+            </tr>
+        
         </table>
+        
     </div>
 </div>
 <script>

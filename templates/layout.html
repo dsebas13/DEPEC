@@ -2,108 +2,186 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>DePeC</title>
-  <link rel="icon" type="image/png" href="{{ url_for('static', filename='image/soloLogo_Indec.png')}}"/>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='image/soloLogo_Indec.png')}}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
   <!-- <link rel="stylesheet" type="text/css" href="/static/css/fontawesome/css/all.css"> -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #3f3f3f;"  >
-    <a class="navbar-brand" href="/">
-      <img src="{{ url_for('static', filename='image/depec.png')}}" class="avatar2" alt="Avatar Image">
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+  <table width="100%">
+    <tr>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul style="font-size: 16px;" class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/gridcv">CV's</a>
-        </li>
-        &nbsp;
-        &nbsp;
-        {% if session['rol']  == 1 %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-            aria-expanded="false">Búsqueda</a>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="/gridjobs">Busquedas Activas</a>
-            <a class="dropdown-item" href="/mygridjobs">Mis Búsquedas</a>
+      <td style="width: 10%;">
+
+      </td>
+      <td>
+        <table width="100%">
+          <tr>
+            <td>
+              <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='image/FTranspDepecLetraNaranja.png')}}" class="avatar2"
+                  alt="Avatar Image">
+              </a>
+            </td>
+            <td style="text-align: right;">
+              <a href="https://www.indec.gob.ar/" target="_blank">
+                <img src="{{ url_for('static', filename='image/IndecTransparente.png')}}"
+                  style="width: 254px; height: 109px;" ; class="avatar3" alt="Avatar Image">
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td style="width: 10%;">
+
+      </td>
+    </tr>
+  </table>
+
+  
+  <table width="100%">
+    <tr>
+      <td style="width: 10%;">
+
+      </td>
+      <td style="width: 80%">
+        <nav class="navbar navbar-expand-lg navbar-dark"
+          style="background-color: rgba(33,156,151,1); border-radius: 30px; height: 50px;">
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul style="font-size: 16px;" class="navbar-nav mr-auto">
+              &nbsp;
+              &nbsp;
+              <li class="nav-item">
+                <a class="nav-link" href="/gridcv">CV's</a>
+              </li>
+              &nbsp;
+              &nbsp;
+              {% if session['rol'] == 1 %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                  aria-expanded="false">Búsqueda</a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="/gridjobs">Busquedas Activas</a>
+                  <a class="dropdown-item" href="/mygridjobs">Mis Búsquedas</a>
+                </div>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="/gridjobs">Busquedas Activas</a>
+              </li>
+              {% endif %}
+              &nbsp;
+              &nbsp;
+              {% if session['rol'] == 1 %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                  aria-expanded="false">Postulación</a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="/mispostulaciones">Mis Postulaciones</a>
+                  <a class="dropdown-item" href="/evaluarpostulaciones">Evaluar Candidatos</a>
+                </div>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="/mispostulaciones">Mis Postulaciones</a>
+              </li>
+              {% endif %}
+              &nbsp;
+              &nbsp;
+              {% if session['rol'] == 1 %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                  aria-expanded="false">Atributos</a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="/atributo/I">Idiomas</a>
+                  <a class="dropdown-item" href="/atributo/T">Conocimientos Técnicos</a>
+                  <a class="dropdown-item" href="/atributo/A">Caracteristicas Personales</a>
+                  <a class="dropdown-item" href="/atributo/E">Estudios Academicos</a>
+                </div>
+              </li>
+              &nbsp;
+              &nbsp;
+              <li class="nav-item">
+                <a class="nav-link" href="/perfil">Perfil</a>
+              </li>
+              {% endif %}
+            </ul>
           </div>
-        </li>
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="/gridjobs">Busquedas Activas</a>
-        </li>
-        {% endif %}
-        &nbsp;
-        &nbsp;
-        {% if session['rol']  == 1 %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-            aria-expanded="false">Postulación</a>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="/mispostulaciones">Mis Postulaciones</a>
-            <a class="dropdown-item" href="/evaluarpostulaciones">Evaluar Candidatos</a>
-          </div>
-        </li>
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="/mispostulaciones">Mis Postulaciones</a>
-        </li>
-        {% endif %}
-        &nbsp;
-        &nbsp;
-        {% if session['rol'] == 1 %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-            aria-expanded="false">Atributos</a>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="/atributo/I">Idiomas</a>
-            <a class="dropdown-item" href="/atributo/T">Conocimientos Técnicos</a>
-            <a class="dropdown-item" href="/atributo/A">Caracteristicas Personales</a>
-            <a class="dropdown-item" href="/atributo/E">Estudios Academicos</a>
-          </div>
-        </li>
-        &nbsp;
-        &nbsp;
-        <li class="nav-item">
-          <a class="nav-link" href="/perfil">Perfil</a>
-        </li>
-        {% endif %}
-      </ul>
+
+          &nbsp;
+
+          <h5 style="color: white; margin-top: 10px;"> Usuario: {{session['name'].capitalize()}}
+            {{session['surname'].capitalize()}}&#10;{%if
+            session['rol'] == 1 %}Rol: Admin {% else %}Rol: User {% endif %} </h5><br>
+          &nbsp;
 
 
-    </div>
-    <!--       <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="text" placeholder="Search">
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-      </form> -->
-      <h5 style="color: white;">Usuario: {{session['name'].capitalize()}} {{session['surname'].capitalize()}}&#10;{%if session['rol'] == 1 %}Rol: Admin {% else %}Rol: User {% endif %}</h5><br>
-      
-      
-      &nbsp;
-      <a data-bs-toggle="tooltip" data-bs-placement="top" title="Usuario: {{session['name'].capitalize()}} {{session['surname'].capitalize()}}&#10;{%if session['rol'] == 1 %}Rol: Admin {% else %}Rol: User {% endif %}" 
-      href="/logout" class="btn btn-primary" style="float: right;"><i class="fas fa-user"></i></a>
-      &nbsp;
-      &nbsp;
-    <a data-bs-toggle="tooltip" data-bs-placement="top" title="Cerrar Sesión" href="/logout" class="btn btn-danger" style="float: right;"><i class="fas fa-sign-out-alt"></i></a>
-  </nav>
+          &nbsp;
+          <a data-bs-toggle="tooltip" data-bs-placement="top"
+            title="Usuario: {{session['name'].capitalize()}} {{session['surname'].capitalize()}}&#10;{%if session['rol'] == 1 %}Rol: Admin {% else %}Rol: User {% endif %}"
+            href="/logout" class="btn btn-primary"
+            style="float: right; align-items: center; display: flex; justify-content: center; width: 20px; height: 20px; border-radius: 12px;"><i
+              class="fas fa-user"></i></a>
+          &nbsp;
+          &nbsp;
+          <a data-bs-toggle="tooltip" data-bs-placement="top" title="Cerrar Sesión" href="/logout"
+            class="btn btn-danger"
+            style="float: right; align-items: center; display: flex; justify-content: center; width: 20px; height: 20px;border-radius: 12px; "><i
+              class="fas fa-sign-out-alt"></i></a>
+        </nav>
+      </td>
+      <td style="width: 10%;">
+        
+      </td>
+    </tr>
+  </table>
+
   <div class="container pt-4">
     {% block body%}
     {% endblock %}
   </div>
+  <table width="100%">
+    <tr style="background-color: rgb(65, 65, 65); color:white; height: 10vh;">
+      <td style="width: 5%;">
+
+      </td>
+      <td style="text-align: left;">
+          Desarrollo Personal de Carrera <br> <br>
+          Quienes Somos
+      </td>
+      <td>
+        Mesa de Ayuda
+      </td>
+      <td>
+        <i class="far fa-copyright"></i>opyright 
+      </td>
+      <td style="text-align: right;">
+        Version: 1.1 <br> <br>
+        Agradecimientos 
+      </td>
+      <td style="width: 5%;">
+
+      </td>
+    </tr>
+  </table>
   <!-- Scrips -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -118,18 +196,6 @@
 
   <script src="{{url_for('static', filename='js/main.js')}}"></script>
 </body>
-<footer>
-  <div>
-    <h5 class="footer2"> Desarrollo Personal de Carrera
 
-    </h5>
-    <h5>Version: 0.3 &nbsp;&nbsp;&nbsp;&nbsp;  </h5>
-  </div>
-  <div>
-
-  </div>
-
-
-</footer>
 
 </html>
